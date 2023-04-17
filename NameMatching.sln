@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameMatching", "NameMatching\NameMatching.csproj", "{7B2B7E0A-A850-47EE-ACAF-0A7803011F6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameMatching.Tests", "NameMatching.Tests\NameMatching.Tests.csproj", "{DD6A0ED3-9978-425B-B7F7-A8792DF3AC5B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B2B7E0A-A850-47EE-ACAF-0A7803011F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B2B7E0A-A850-47EE-ACAF-0A7803011F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B2B7E0A-A850-47EE-ACAF-0A7803011F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B2B7E0A-A850-47EE-ACAF-0A7803011F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD6A0ED3-9978-425B-B7F7-A8792DF3AC5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD6A0ED3-9978-425B-B7F7-A8792DF3AC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD6A0ED3-9978-425B-B7F7-A8792DF3AC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD6A0ED3-9978-425B-B7F7-A8792DF3AC5B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
