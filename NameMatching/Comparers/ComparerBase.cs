@@ -1,6 +1,6 @@
 ﻿namespace NameMatching.Comparers;
 
-public abstract class NameComparer : IEqualityComparer<Name>
+public abstract class ComparerBase : IEqualityComparer<Name>
 {
 	protected static bool CompareRequiredString(string x, string y)
 		=> string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
