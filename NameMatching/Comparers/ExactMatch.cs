@@ -4,24 +4,11 @@ public sealed class ExactMatch : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
 	{
-		if (x == null || y == null)
-		{
-			return false;
-		}
-
-		if (x == y)
-		{
-			return true;
-		}
-
-		var sortedXLastName = x.LastName.OrderBy(name => name).ToList();
-		var sortedYLastName = y.LastName.OrderBy(name => name).ToList();
-
-		return CompareRequiredString(x.FirstName, y.FirstName)
-			&& CompareOptionalString(x.MiddleName, y.MiddleName)
-			&& sortedXLastName.SequenceEqual(sortedYLastName, StringComparer.InvariantCultureIgnoreCase)
-			&& CompareOptionalString(x.Suffix, y.Suffix)
-			|| CompareTokens(x, y);
+		return CompareRequiredNamePart(x.FirstName, y.FirstName)
+		       && CompareRequiredNamePart(x.MiddleName, y.MiddleName)
+		       && CompareRequiredNamePart(x.LastName, y.LastName)
+		       && CompareOptionalString(x.Suffix, y.Suffix) 
+		       || CompareTokens(x, y);
 	}
 
 	public override int GetHashCode(Name obj)
@@ -29,11 +16,13 @@ public sealed class ExactMatch : ComparerBase
 		return obj switch
 		{
 			null => 0,
-			_ => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.FirstName.ToLowerInvariant())
-			^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.MiddleName.ToLowerInvariant())
-			^ obj.LastName.Aggregate(0, (hash, lastName)
-				   => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
-			^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
+			_ =>  obj.FirstName.Aggregate(0, (hash, firstName) 
+				      => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(firstName.ToLowerInvariant())) 
+			      ^ obj.MiddleName.Aggregate(0, (hash, middleName)
+						=> hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(middleName.ToLowerInvariant()))
+			      ^ obj.LastName.Aggregate(0, (hash, lastName)
+						=> hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
+			     ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
 	}
 

@@ -4,20 +4,7 @@ public sealed class Last : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
 	{
-		if (x == null || y == null)
-		{
-			return false;
-		}
-
-		if (x == y)
-		{
-			return true;
-		}
-
-		var sortedXLastName = x.LastName.OrderBy(name => name).ToList();
-		var sortedYLastName = y.LastName.OrderBy(name => name).ToList();
-
-		return sortedXLastName.SequenceEqual(sortedYLastName, StringComparer.InvariantCultureIgnoreCase);
+		return CompareRequiredNamePart(x.LastName, y.LastName);
 	}
 
 	public override int GetHashCode(Name obj)
