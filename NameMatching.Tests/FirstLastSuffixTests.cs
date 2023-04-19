@@ -8,7 +8,7 @@ public class FirstLastSuffixTests
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Eve", "Smith", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Doe", "Jr.", false)]
 	[InlineData("John", "", "Smith Jones", "", "John", "", "Smith Jones", "", true)]
-	[InlineData("John", "", "Smith Jones", "", "John", "", "Jones Smith", "", true)]
+	[InlineData("John", "D", "Smith Jones", "", "John", "", "Jones Smith", "", true)]
 	[InlineData("John", "", "Smith", "", "John", "", "Smith Jones", "", false)]
 	public void Equals_ShouldCompareFirstLastSuffixCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
