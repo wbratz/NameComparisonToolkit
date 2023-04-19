@@ -5,10 +5,10 @@ public sealed class ExactMatch : ComparerBase
 	public override bool Equals(Name x, Name y)
 	{
 		return CompareRequiredNamePart(x.FirstName, y.FirstName)
-		       && CompareRequiredNamePart(x.MiddleName, y.MiddleName)
-		       && CompareRequiredNamePart(x.LastName, y.LastName)
-		       && CompareOptionalString(x.Suffix, y.Suffix) 
-		       || CompareTokens(x, y);
+			   && CompareRequiredNamePart(x.MiddleName, y.MiddleName)
+			   && CompareRequiredNamePart(x.LastName, y.LastName)
+			   && CompareOptionalString(x.Suffix, y.Suffix)
+			   || CompareTokens(x, y);
 	}
 
 	public override int GetHashCode(Name obj)
@@ -16,13 +16,13 @@ public sealed class ExactMatch : ComparerBase
 		return obj switch
 		{
 			null => 0,
-			_ =>  obj.FirstName.Aggregate(0, (hash, firstName) 
-				      => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(firstName.ToLowerInvariant())) 
-			      ^ obj.MiddleName.Aggregate(0, (hash, middleName)
+			_ => obj.FirstName.Aggregate(0, (hash, firstName)
+					  => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(firstName.ToLowerInvariant()))
+				  ^ obj.MiddleName.Aggregate(0, (hash, middleName)
 						=> hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(middleName.ToLowerInvariant()))
-			      ^ obj.LastName.Aggregate(0, (hash, lastName)
+				  ^ obj.LastName.Aggregate(0, (hash, lastName)
 						=> hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
-			     ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
+				 ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
 	}
 
@@ -34,4 +34,10 @@ public sealed class ExactMatch : ComparerBase
 		return xTokens.Count == yTokens.Count
 			&& !xTokens.Except(yTokens, StringComparer.InvariantCultureIgnoreCase).Any();
 	}
+
+	public override bool Contains(Name x, string y)
+		=> y.Contains(string.Join(" ", x.FirstName))
+		&& y.Contains(string.Join(" ", x.MiddleName))
+		&& y.Contains(string.Join(" ", x.LastName))
+		&& y.Contains(string.Join(" ", x.Suffix));
 }

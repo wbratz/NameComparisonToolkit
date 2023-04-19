@@ -3,9 +3,10 @@
 public sealed class Last : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
-	{
-		return CompareRequiredNamePart(x.LastName, y.LastName);
-	}
+		=> CompareRequiredNamePart(x.LastName, y.LastName);
+
+	public override bool Contains(Name x, string y)
+		=> y.Contains(string.Join(" ", x.LastName));
 
 	public override int GetHashCode(Name obj)
 		=> obj switch

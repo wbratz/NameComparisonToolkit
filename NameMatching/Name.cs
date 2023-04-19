@@ -1,9 +1,11 @@
-﻿namespace NameMatching;
+﻿using NameMatching.Comparers;
+
+namespace NameMatching;
 
 public sealed class Name
 {
 	private static readonly string _ignoredString = "NONE";
-	public  IEnumerable<string> FirstName { get; }
+	public IEnumerable<string> FirstName { get; }
 	public IEnumerable<string> LastName { get; }
 	public IEnumerable<string> MiddleName { get; }
 	public string Suffix { get; }
@@ -26,101 +28,102 @@ public sealed class Name
 
 	public Name(string firstName, string middleName, string lastName, string suffix)
 	{
-		FirstName =  firstName != null ? firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
+		FirstName = firstName != null ? firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
 		MiddleName = middleName != null ? middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
 		LastName = lastName != null ? lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
-		Suffix = ReplaceIgnoredStrings(suffix?.Trim() ?? string.Empty);
+		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
-	
 	public Name(IEnumerable<string> firstName, IEnumerable<string> middleName, IEnumerable<string> lastName, string suffix)
 	{
-		FirstName =  firstName != null ? firstName : Enumerable.Empty<string>();
-		MiddleName = middleName != null ? middleName : Enumerable.Empty<string>();
-		LastName = lastName != null ? lastName : Enumerable.Empty<string>();
-		Suffix = ReplaceIgnoredStrings(suffix?.Trim() ?? string.Empty);
+		FirstName = firstName ?? Enumerable.Empty<string>();
+		MiddleName = middleName ?? Enumerable.Empty<string>();
+		LastName = lastName ?? Enumerable.Empty<string>();
+		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
-	// public Name(string fullName) : this(Parse(fullName))
-	// {
-	// }
-	//
-	// public Name(Name parsedName)
-	// 	: this(string.Join(" ", parsedName.FirstName), parsedName.MiddleName, string.Join(" ", parsedName.LastName), parsedName.Suffix)
-	// {
-	// }
-	//
-	
-
 	public bool Matches(Name name)
-		=> Matches(name, Comparison.ExactMatchIgnoreCase);
+		=> Matches(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
+
+	/// <summary>
+	/// Matches a name string to a name object parts using desired comparison
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	public bool Contains(string name, ComparisonType comparison)
+		=> Contains(name, comparison.GetComparer());
+
+	/// <summary>
+	/// Matches a name string to a name object parts using exact match rules
+	/// All parts of the name object must be contained in the string
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	public bool Contains(string name)
+		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
 	public bool Matches(Name name, ComparisonType comparison)
-		=> Matches(name, GetComparer(comparison));
+		=> Matches(name, comparison.GetComparer());
 
 	public bool MatchesAny(IEnumerable<Name> names, ComparisonType comparison)
-		=> names.Any(x => Matches(x, GetComparer(comparison)));
+		=> names.Any(x => Matches(x, comparison.GetComparer()));
 
 	public bool Matches(Name name, IEqualityComparer<Name> comparer)
 		=> comparer.Equals(this, name);
 
-	private static IEqualityComparer<Name> GetComparer(ComparisonType comparison)
-	{
-		return comparison switch
-		{
-			ComparisonType.ExactMatchIgnoreCase => Comparison.ExactMatchIgnoreCase,
-			ComparisonType.FirstNameLastNameIgnoreCase => Comparison.FirstNameLastNameIgnoreCase,
-			ComparisonType.LastNameIgnoreCase => Comparison.LastNameIgnoreCase,
-			ComparisonType.FirstLastSuffixIgnoreCase => Comparison.FirstLastSuffixIgnoreCase,
-			ComparisonType.NoMatch => Comparison.NoMatch,
-			_ => Comparison.ExactMatchIgnoreCase,
-		};
-	}
+	public bool Contains(string name, ComparerBase comparer)
+		=> comparer.Contains(this, name);
 
-	// private static Name Parse(string fullName)
-	// {
-	// 	if (string.IsNullOrWhiteSpace(fullName))
-	// 	{
-	// 		throw new ArgumentException("Full name cannot be null or empty.", nameof(fullName));
-	// 	}
-	//
-	// 	var tokens = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-	//
-	// 	if (tokens.Length == 1)
-	// 	{
-	// 		return new Name(tokens[0], string.Empty);
-	// 	}
-	//
-	// 	var firstName = tokens[0];
-	// 	var middleName = string.Empty;
-	// 	var lastNames = new List<string>();
-	// 	var suffix = tokens.Length > 1 && IsSuffix(tokens[^1]) ? tokens[^1] : string.Empty;
-	//
-	// 	for (var i = 1; i < tokens.Length; i++)
-	// 	{
-	// 		if (string.IsNullOrEmpty(middleName))
-	// 		{
-	// 			middleName = tokens[i];
-	// 		}
-	// 		else
-	// 		{
-	// 			lastNames.Add(tokens[i]);
-	// 		}
-	// 	}
-	//
-	// 	if (lastNames.Count == 0)
-	// 	{
-	// 		middleName = string.Empty;
-	// 		lastNames.Add(tokens[1]);
-	// 	}
-	//
-	// 	return new Name(firstName, middleName, lastNames, suffix);
-	// }
+	// kept for future development
+	private static Name Parse(string fullName)
+	{
+		if (string.IsNullOrWhiteSpace(fullName))
+		{
+			throw new ArgumentException("Full name cannot be null or empty.", nameof(fullName));
+		}
+
+		var tokens = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+		if (tokens.Length == 1)
+		{
+			return new Name(tokens[0], string.Empty);
+		}
+
+		var firstName = tokens[0];
+		var middleName = string.Empty;
+		var lastNames = new List<string>();
+		var suffix = tokens.Length > 1 && IsSuffix(tokens[^1]) ? tokens[^1] : string.Empty;
+
+		for (var i = 1; i < tokens.Length; i++)
+		{
+			if (string.IsNullOrEmpty(middleName))
+			{
+				middleName = tokens[i];
+			}
+			else
+			{
+				lastNames.Add(tokens[i]);
+			}
+		}
+
+		if (lastNames.Count == 0)
+		{
+			middleName = string.Empty;
+			lastNames.Add(tokens[1]);
+		}
+
+		return new Name(firstName, middleName, string.Join(" ", lastNames), suffix);
+	}
 
 	private static bool IsSuffix(string token)
 		=> _suffixList.Contains(token, StringComparer.OrdinalIgnoreCase);
 
 	private static string ReplaceIgnoredStrings(string token)
 		=> token?.ToUpper() == _ignoredString ? string.Empty : token ?? string.Empty;
+
+	private static string NormalizeSuffix(string suffix)
+		=> string.IsNullOrEmpty(suffix)
+			? string.Empty
+			: suffix.Replace(".", "").ToLowerInvariant();
 
 	private static readonly string[] _suffixList = new[] {
 		"senior",

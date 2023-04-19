@@ -11,12 +11,12 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 		{
 			return false;
 		}
-		
+
 		var sortedXName = x.OrderBy(name => name).ToList();
 		var sortedYName = y.OrderBy(name => name).ToList();
 		return sortedXName.SequenceEqual(sortedYName, StringComparer.InvariantCultureIgnoreCase);
 	}
-	
+
 
 	protected static bool CompareOptionalString(string x, string y)
 		=> ReferenceEquals(x, y)
@@ -24,5 +24,6 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 			|| string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
 
 	public abstract bool Equals(Name x, Name y);
+	public abstract bool Contains(Name x, string y);
 	public abstract int GetHashCode(Name obj);
 }
