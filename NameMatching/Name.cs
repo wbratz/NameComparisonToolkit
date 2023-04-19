@@ -31,6 +31,14 @@ public sealed class Name
 		LastName = lastName != null ? lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
 		Suffix = ReplaceIgnoredStrings(suffix?.Trim() ?? string.Empty);
 	}
+	
+	public Name(IEnumerable<string> firstName, IEnumerable<string> middleName, IEnumerable<string> lastName, string suffix)
+	{
+		FirstName =  firstName != null ? firstName : Enumerable.Empty<string>();
+		MiddleName = middleName != null ? middleName : Enumerable.Empty<string>();
+		LastName = lastName != null ? lastName : Enumerable.Empty<string>();
+		Suffix = ReplaceIgnoredStrings(suffix?.Trim() ?? string.Empty);
+	}
 
 	// public Name(string fullName) : this(Parse(fullName))
 	// {
@@ -41,10 +49,7 @@ public sealed class Name
 	// {
 	// }
 	//
-	// public Name(string firstName, string middleName, IEnumerable<string> lastName, string suffix)
-	// 	: this(firstName, middleName, string.Join(" ", lastName), suffix)
-	// {
-	// }
+	
 
 	public bool Matches(Name name)
 		=> Matches(name, Comparison.ExactMatchIgnoreCase);
