@@ -4,21 +4,9 @@ public sealed class FirstLast : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
 	{
-		if (x == null || y == null)
-		{
-			return false;
-		}
-
-		if (x == y)
-		{
-			return true;
-		}
-
-		var sortedXLastName = x.LastName.OrderBy(name => name).ToList();
-		var sortedYLastName = y.LastName.OrderBy(name => name).ToList();
-
-		return (CompareRequiredString(x.FirstName, y.FirstName)
-			&& sortedXLastName.SequenceEqual(sortedYLastName, StringComparer.InvariantCultureIgnoreCase))
+		
+		return (CompareRequiredNamePart(x.FirstName, y.FirstName)
+			&& CompareRequiredNamePart(x.LastName, y.LastName))
 			|| CompareTokens(x, y);
 	}
 
@@ -26,9 +14,10 @@ public sealed class FirstLast : ComparerBase
 		=> obj switch
 		{
 			null => 0,
-			_ => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.FirstName.ToLowerInvariant())
-			^ obj.LastName.Aggregate(0, (hash, lastName)
-				=> hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
+			_ => obj.FirstName.Aggregate(0, (hash, firstName)
+				     => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(firstName.ToLowerInvariant())) 
+			     ^ obj.LastName.Aggregate(0, (hash, lastName)
+				     => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
 		};
 
 	private static bool CompareTokens(Name x, Name y)
