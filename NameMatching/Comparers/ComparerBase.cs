@@ -12,9 +12,9 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 			return false;
 		}
 		
-		var sortedXLastName = x.OrderBy(name => name).ToList();
-		var sortedYLastName = y.OrderBy(name => name).ToList();
-		return sortedXLastName.SequenceEqual(sortedYLastName, StringComparer.InvariantCultureIgnoreCase);
+		var sortedXName = x.OrderBy(name => name).ToList();
+		var sortedYName = y.OrderBy(name => name).ToList();
+		return sortedXName.SequenceEqual(sortedYName, StringComparer.InvariantCultureIgnoreCase);
 	}
 	
 
