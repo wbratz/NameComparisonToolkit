@@ -1,0 +1,45 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Check if package version exists
+      run: |
+        wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+        PACKAGE_VERSION=$(dotnet list package --outdated | grep 'NameComparisonToolkit' | awk '{print $2}')
+        EXISTS=$(mono nuget.exe search NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
+        echo "PACKAGE_VERSION_EXISTS=$EXISTS" >> $GITHUB_ENV
+
+    - name: Fail if package version exists
+      if: env.PACKAGE_VERSION_EXISTS != '0'
+      run: |
+        echo "Error: Package version already exists on NuGet"
+        exit 1
+
+    - name: Publish
+      if: env.PACKAGE_VERSION_EXISTS == '0'
+      run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      env:
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: true
+

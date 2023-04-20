@@ -5,7 +5,7 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 	protected static bool CompareRequiredString(string x, string y)
 		=> string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
 
-	protected static bool CompareRequiredNamePart(IEnumerable<string> x, IEnumerable<string> y)
+	protected static bool CompareRequiredNamePartIgnoreOrder(IEnumerable<string> x, IEnumerable<string> y)
 	{
 		if (!x.Any() || !y.Any())
 		{
@@ -17,6 +17,16 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 		return sortedXName.SequenceEqual(sortedYName, StringComparer.InvariantCultureIgnoreCase);
 	}
 
+	protected static bool CompareRequiredNamePart(IEnumerable<string> x, IEnumerable<string> y)
+	{
+		if (!x.Any() || !y.Any())
+		{
+			return false;
+		}
+
+		return x.SequenceEqual(y, StringComparer.InvariantCultureIgnoreCase);
+	}
+
 	protected static bool CompareOptionalString(string x, string y)
 		=> ReferenceEquals(x, y)
 			|| string.IsNullOrEmpty(x) && string.IsNullOrEmpty(y)
@@ -26,8 +36,9 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 		=> x.Count() > y.Count() ? (x, y) : (y, x);
 
 	public abstract bool Equals(Name x, Name y);
+	public abstract bool EqualsIgnoreOrder(Name x, Name y);
 	public abstract bool Contains(Name x, string y);
-	public abstract bool Contains(Name x, Name y);
+	public abstract bool Intersects(Name x, Name y);
 	public abstract double GetConfidence(Name x, Name y);
 	public abstract int GetHashCode(Name obj);
 }

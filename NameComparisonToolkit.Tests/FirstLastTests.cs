@@ -20,6 +20,19 @@ public class FirstLastTests
 	}
 
 	[Theory]
+	[InlineData("John James", "Smith Doe", "James John", "Doe Smith", true)]
+	[InlineData("John James", "Smith Doe", "James John", "Smith Doe", true)]
+	[InlineData("John James", "Doe", "James John", "Smith Doe", false)]
+	public void EqualsIgnoreOrder_ShouldCompareCorrectly(string firstName1, string lastName1, string firstName2, string lastName2, bool expectedResult)
+	{
+		var name1 = new Name(firstName1, lastName1);
+		var name2 = new Name(firstName2, lastName2);
+
+		var comparer = new FirstLast();
+		comparer.EqualsIgnoreOrder(name1, name2).Should().Be(expectedResult);
+	}
+
+	[Theory]
 	[InlineData("John James", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("James", "John Adam", "Smith", "Sr.", "John", "Adam", "Smith", "Sr.", false)]
 	[InlineData("John", "James Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
@@ -41,7 +54,7 @@ public class FirstLastTests
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
 		var comparer = new FirstLast();
-		comparer.Contains(name1, name2).Should().Be(expectedResult);
+		comparer.Intersects(name1, name2).Should().Be(expectedResult);
 	}
 }
 

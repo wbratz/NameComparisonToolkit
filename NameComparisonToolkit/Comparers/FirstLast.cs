@@ -10,6 +10,11 @@ public sealed class FirstLast : ComparerBase
 			&& CompareRequiredNamePart(x.LastName, y.LastName))
 			|| CompareTokens(x, y);
 
+	public override bool EqualsIgnoreOrder(Name x, Name y)
+		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
+			   && CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName)
+			   || CompareTokens(x, y);
+
 	public override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.FirstName))
 			&& y.Contains(string.Join(" ", x.LastName));
@@ -28,7 +33,7 @@ public sealed class FirstLast : ComparerBase
 		=> ConfidenceBuilder.Build(x.FirstName.Join(" "), y.FirstName.Join(" "))
 			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "));
 
-	public override bool Contains(Name x, Name y)
+	public override bool Intersects(Name x, Name y)
 		=> y.FirstName.Intersect(x.FirstName).Any()
 			&& y.LastName.Intersect(x.LastName).Any();
 

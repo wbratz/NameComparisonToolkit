@@ -8,13 +8,16 @@ public sealed class Last : ComparerBase
 	public override bool Equals(Name x, Name y)
 		=> CompareRequiredNamePart(x.LastName, y.LastName);
 
+	public override bool EqualsIgnoreOrder(Name x, Name y)
+		=> CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName);
+
 	public override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.LastName));
 
 	public override double GetConfidence(Name x, Name y)
 		=> ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "));
 
-	public override bool Contains(Name x, Name y)
+	public override bool Intersects(Name x, Name y)
 		=> y.LastName.Intersect(x.LastName).Any();
 
 	public override int GetHashCode(Name obj)
