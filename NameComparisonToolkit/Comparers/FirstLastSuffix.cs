@@ -11,6 +11,12 @@ public sealed class FirstLastSuffix : ComparerBase
 				&& CompareRequiredString(x.Suffix, y.Suffix))
 			   || CompareTokens(x, y);
 
+	public override bool EqualsIgnoreOrder(Name x, Name y)
+		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
+			   && CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName)
+			   && CompareOptionalString(x.Suffix, y.Suffix)
+			   || CompareTokens(x, y);
+
 	public override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.FirstName))
 			&& y.Contains(string.Join(" ", x.LastName))
@@ -32,7 +38,7 @@ public sealed class FirstLastSuffix : ComparerBase
 			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "))
 			* ConfidenceBuilder.Build(x.Suffix, y.Suffix);
 
-	public override bool Contains(Name x, Name y)
+	public override bool Intersects(Name x, Name y)
 		=> y.FirstName.Intersect(x.FirstName).Any()
 			&& y.LastName.Intersect(x.LastName).Any()
 			&& CompareRequiredString(x.Suffix, y.Suffix);

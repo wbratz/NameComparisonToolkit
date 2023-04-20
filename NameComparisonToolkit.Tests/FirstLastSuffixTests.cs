@@ -8,7 +8,7 @@ public class FirstLastSuffixTests
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Eve", "Smith", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Doe", "Jr.", false)]
 	[InlineData("John", "", "Smith Jones", "", "John", "", "Smith Jones", "", true)]
-	[InlineData("John", "D", "Smith Jones", "", "John", "", "Jones Smith", "", true)]
+	[InlineData("John", "D", "Smith Jones", "", "John", "", "Jones Smith", "", false)]
 	[InlineData("John", "", "Smith", "", "John", "", "Smith Jones", "", false)]
 	public void Equals_ShouldCompareFirstLastSuffixCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
@@ -17,6 +17,19 @@ public class FirstLastSuffixTests
 
 		var comparer = new FirstLastSuffix();
 		comparer.Equals(name1, name2).Should().Be(expectedResult);
+	}
+
+	[Theory]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Doe Smith", "Jr.", true)]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Smith Doe", "Sr.", false)]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "", "James John", "Michael Adam", "Smith Doe", "", true)]
+	public void EqualsIgnoreOrder_ShouldCompareCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
+	{
+		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
+		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
+
+		var comparer = new FirstLastSuffix();
+		comparer.EqualsIgnoreOrder(name1, name2).Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -44,6 +57,6 @@ public class FirstLastSuffixTests
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
 		var comparer = new FirstLastSuffix();
-		comparer.Contains(name1, name2).Should().Be(expectedResult);
+		comparer.Intersects(name1, name2).Should().Be(expectedResult);
 	}
 }

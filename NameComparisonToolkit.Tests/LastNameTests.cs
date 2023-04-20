@@ -4,7 +4,7 @@ public class LastNameTests
 	[Theory]
 	[InlineData("John", "Adam", "Smith Doe", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", false)]
-	[InlineData("John", "Adam", "Doe Smith", "Jr.", true)]
+	[InlineData("John", "Adam", "Doe Smith", "Jr.", false)]
 	public void Equals_ShouldHandleMultipleLastNamesCorrectly(string firstName, string middleName, string lastName, string suffix, bool expectedResult)
 	{
 		var name1 = new Name("John", "Adam", "Smith Doe", "Jr.");
@@ -12,6 +12,19 @@ public class LastNameTests
 
 		var comparer = new Last();
 		comparer.Equals(name1, name2).Should().Be(expectedResult);
+	}
+
+	[Theory]
+	[InlineData("John", "Adam", "Smith Doe", "Jr.", "John", "Adam", "Doe Smith", "Jr.", true)]
+	[InlineData("John", "Adam", "Smith Doe", "Jr.", "John", "Adam", "Smith", "Jr.", false)]
+	[InlineData("John", "Adam", "Smith Doe", "Jr.", "John", "Adam", "Doe", "Jr.", false)]
+	public void EqualsIgnoreOrder_ShouldHandleMultipleLastNamesCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
+	{
+		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
+		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
+
+		var comparer = new Last();
+		comparer.EqualsIgnoreOrder(name1, name2).Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -31,6 +44,6 @@ public class LastNameTests
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
 		var comparer = new Last();
-		comparer.Contains(name1, name2).Should().Be(expectedResult);
+		comparer.Intersects(name1, name2).Should().Be(expectedResult);
 	}
 }

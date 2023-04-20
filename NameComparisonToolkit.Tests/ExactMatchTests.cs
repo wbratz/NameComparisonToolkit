@@ -20,6 +20,20 @@ public class ExactMatchTests
 	}
 
 	[Theory]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Doe Smith", "Jr.", true)]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "Sr.", "James John", "Michael Adam", "Smith Doe", "Sr.", true)]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Smith", "Jr.", false)]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "Sr.", "James John", "Michael Adam", "Smith Doe", "", false)]
+	public void EqualsIgnoreOrder_ShouldCompareCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
+	{
+		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
+		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
+
+		var comparer = new ExactMatch();
+		comparer.EqualsIgnoreOrder(name1, name2).Should().Be(expectedResult);
+	}
+
+	[Theory]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "James", "Smith", "Jr.", false)]
@@ -36,6 +50,6 @@ public class ExactMatchTests
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
 		var comparer = new ExactMatch();
-		comparer.Contains(name1, name2).Should().Be(expectedResult);
+		comparer.Intersects(name1, name2).Should().Be(expectedResult);
 	}
 }

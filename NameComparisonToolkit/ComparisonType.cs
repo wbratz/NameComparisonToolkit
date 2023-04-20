@@ -2,9 +2,9 @@
 
 public enum ComparisonType
 {
-	ExactMatchIgnoreCase,
-	FirstNameLastNameIgnoreCase,
-	NoMatch,
-	LastNameIgnoreCase,
-	FirstLastSuffixIgnoreCase
+	ExactMatchIgnoreCase = 0,
+	FirstNameLastNameIgnoreCase = 1,
+	NoMatch = 2,
+	LastNameIgnoreCase = 3,
+	FirstLastSuffixIgnoreCase = 4
 }

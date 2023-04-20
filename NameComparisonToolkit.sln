@@ -7,6 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameComparisonToolkit", "Na
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameComparisonToolkit.Tests", "NameComparisonToolkit.Tests\NameComparisonToolkit.Tests.csproj", "{939487F5-CB07-4FA9-A369-195F5A6258D4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{3DDFBD38-D579-4A96-80C4-2F2F0F45D47F}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows = .github\workflows
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+		.github\workflows\test.yml = .github\workflows\test.yml
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C192C1E7-75F2-4BBB-9414-E3B0ECDD7A12}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md

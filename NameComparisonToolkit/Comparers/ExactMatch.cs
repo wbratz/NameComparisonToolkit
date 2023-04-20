@@ -14,6 +14,13 @@ public sealed class ExactMatch : ComparerBase
 			   || CompareTokens(x, y);
 	}
 
+	public override bool EqualsIgnoreOrder(Name x, Name y)
+		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
+			   && CompareRequiredNamePartIgnoreOrder(x.MiddleName, y.MiddleName)
+			   && CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName)
+			   && CompareOptionalString(x.Suffix, y.Suffix)
+			   || CompareTokens(x, y);
+
 	public override int GetHashCode(Name obj)
 	{
 		return obj switch
@@ -50,7 +57,7 @@ public sealed class ExactMatch : ComparerBase
 		&& y.Contains(string.Join(" ", x.LastName))
 		&& y.Contains(string.Join(" ", x.Suffix));
 
-	public override bool Contains(Name x, Name y) 
+	public override bool Intersects(Name x, Name y) 
 		=> y.FirstName.Intersect(x.FirstName).Any()
 			&& y.MiddleName.Intersect(x.MiddleName).Any()
 			&& y.LastName.Intersect(x.LastName).Any()
