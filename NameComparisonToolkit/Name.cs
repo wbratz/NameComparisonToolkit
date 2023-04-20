@@ -93,11 +93,21 @@ public sealed class Name
 	/// </summary>
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of all Match results</returns>
-	public IEnumerable<ComparisonResult> Matches(Name nameToCompare) //TODO:potentially Rename to RunMatches GetMatches
+	public IEnumerable<ComparisonResult> GetMatchResults(Name nameToCompare) //TODO:potentially Rename to RunMatches GetMatches
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Compare(nameToCompare, t.GetComparer())).ToList();
 	}
 	
+	public IEnumerable<ComparisonResult> GetContainResults(Name nameToCompare) //TODO:potentially Rename? param string or NameObject??
+	{
+		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Contains(nameToCompare.GetFullName(), t.GetComparer())).ToList();
+	}
+
+	public IEnumerable<ComparisonResult> GetInstersectResults(Name nameToCompare)
+	{
+		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Intersects(nameToCompare, t.GetComparer())).ToList();
+	}
+
 	/// <summary>
 	/// Determines if the given name object matches the current name object using the ExactMatchIgnoreCase comparer.
 	/// </summary>
@@ -161,7 +171,7 @@ public sealed class Name
 	/// <param name="name">The name string to compare.</param>
 	/// <param name="comparison">The comparison type to use.</param>
 	/// <returns>True if the name string is contained within the current name object, otherwise false.</returns>
-	public bool Contains(string name, ComparisonType comparison)
+	public ComparisonResult Contains(string name, ComparisonType comparison)
 		=> Contains(name, comparison.GetComparer());
 
 	/// <summary>
@@ -170,7 +180,7 @@ public sealed class Name
 	/// </summary>
 	/// <param name="name">The name string to compare.</param>
 	/// <returns>True if the name string is contained within the current name object, otherwise false.</returns>
-	public bool Contains(string name)
+	public ComparisonResult Contains(string name)
 		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
 	/// <summary>
@@ -178,7 +188,7 @@ public sealed class Name
 	/// </summary>
 	/// <param name="name">The name object to compare.</param>
 	/// <returns>True if the name object intersects with the current name object, otherwise false.</returns>
-	public bool Intersects(Name name)
+	public ComparisonResult Intersects(Name name)
 		=> Intersects(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
 	/// <summary>
@@ -187,7 +197,7 @@ public sealed class Name
 	/// <param name="name">The name object to compare.</param>
 	/// <param name="comparison">The comparison type to use.</param>
 	/// <returns>True if the name object intersects with the current name object, otherwise false.</returns>
-	public bool Intersects(Name name, ComparisonType comparison)
+	public ComparisonResult Intersects(Name name, ComparisonType comparison)
 		=> Intersects(name, comparison.GetComparer());
 
 	/// <summary>
@@ -205,11 +215,24 @@ public sealed class Name
 	private double GetConfidence(Name name, ComparerBase comparer)
 		=> comparer.GetConfidence(this, name);
 
-	private bool Contains(string name, ComparerBase comparer)
-		=> comparer.Contains(this, name);
+	// private ComparisonResult Contains(string name, ComparerBase comparer)
+	// 	=> comparer.Contains(this, name);
+	
+	public ComparisonResult Contains(string name, ComparerBase comparer)
+		=> new()
+		{
+			Method = comparer.GetType().Name,
+			IsMatch = comparer.Contains(this, name),
+			Confidence = 0
+		};
 
-	private bool Intersects(Name name, ComparerBase comparer)
-		=> comparer.Intersects(this, name);
+	private ComparisonResult Intersects(Name name, ComparerBase comparer)
+		=> new()
+		{
+			Method = comparer.GetType().Name,
+			IsMatch = comparer.Intersects(this, name),
+			Confidence = 0
+		};
 
 	// kept for future development
 	private static Name Parse(string fullName)
