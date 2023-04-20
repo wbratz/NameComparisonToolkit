@@ -41,7 +41,24 @@ public sealed class Name
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
-	public bool Matches(Name name)
+	public IEnumerable<ComparisonResult> GetFullComparison(Name nameOne, Name nameTwo)
+	{
+		var comparisonResults = new List<ComparisonResult>();
+		
+		foreach (ComparisonType t in Enum.GetValues(typeof(ComparisonType)))
+		{
+			comparisonResults.Add(nameOne.Matches(nameTwo, t.GetComparer()));
+		}
+		//add result to Comparison
+
+		return comparisonResults;
+		
+		//error and return ComparisonResults obj
+		//tests for this method
+	}
+	
+	
+	public ComparisonResult Matches(Name name)
 		=> Matches(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
 	/// <summary>
@@ -61,15 +78,25 @@ public sealed class Name
 	public bool Contains(string name)
 		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
-	public bool Matches(Name name, ComparisonType comparison)
+	// public bool Matches(Name name, ComparisonType comparison)
+	// 	=> Matches(name, comparison.GetComparer());
+
+	public ComparisonResult Matches(Name name, ComparisonType comparison)
 		=> Matches(name, comparison.GetComparer());
-
+	
 	public bool MatchesAny(IEnumerable<Name> names, ComparisonType comparison)
-		=> names.Any(x => Matches(x, comparison.GetComparer()));
+		=> names.Any(x => Matches(x, comparison.GetComparer()).IsMatch);
 
-	public bool Matches(Name name, IEqualityComparer<Name> comparer)
-		=> comparer.Equals(this, name);
-
+	public ComparisonResult Matches(Name name, IEqualityComparer<Name> comparer)
+		=> new ComparisonResult()
+		{
+			Method = comparer.GetType().ToString(),
+			IsMatch = comparer.Equals(this, name),
+			Confidence = 0
+		};
+	
+	// public bool Matches(Name name, IEqualityComparer<Name> comparer)
+	// 	=> comparer.Equals(this, name);
 	public bool Contains(string name, ComparerBase comparer)
 		=> comparer.Contains(this, name);
 

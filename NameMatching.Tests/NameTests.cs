@@ -21,7 +21,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
-		name1.Matches(name2).Should().BeTrue();
+		name1.Matches(name2).IsMatch.Should().BeTrue();
 	}
 
 	[Fact]
@@ -30,7 +30,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr");
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
-		name1.Matches(name2).Should().BeTrue();
+		name1.Matches(name2).IsMatch.Should().BeTrue();
 	}
 
 	[Fact]
@@ -39,7 +39,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John", "Adam", "Doe", "Jr.");
 
-		name1.Matches(name2).Should().BeFalse();
+		name1.Matches(name2).IsMatch.Should().BeFalse();
 	}
 
 	[Fact]
