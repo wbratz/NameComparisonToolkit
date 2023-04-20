@@ -14,7 +14,7 @@ public sealed class Name
 		=> string.Join(" ", new string[]
 		{
 			string.Join(" ", FirstName),
-			string.Join("", MiddleName),
+			string.Join(" ", MiddleName),
 			string.Join(" ", LastName),
 			includeSuffix ? Suffix : string.Empty
 		}.Where(x => !string.IsNullOrEmpty(x)));
