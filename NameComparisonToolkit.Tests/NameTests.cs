@@ -67,4 +67,16 @@ public class NameTests
 
 		name1.MatchesAny(names, ComparisonType.ExactMatchIgnoreCase).Should().BeFalse();
 	}
+	
+	[Fact]
+	public void GetFullComparison_ShouldReturnResultCount_EqualToComparisonTypeCount()
+	{
+		var typeCount = Enum.GetNames(typeof(ComparisonType)).Length;
+		var name1 = new Name("John", "Adam", "Smith", "Jr.");
+		var name2 = new Name("John", "Adam", "Smith", "Jr.");
+
+		var result = name1.GetFullComparison(name2);
+
+		result.Count().Should().Be(typeCount);
+	}
 }

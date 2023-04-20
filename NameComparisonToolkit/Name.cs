@@ -41,26 +41,31 @@ public sealed class Name
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
-	public IEnumerable<ComparisonResult> GetFullComparison(Name nameOne, Name nameTwo)
+	public IEnumerable<ComparisonResult> GetFullComparison(Name nameToCompare)
 	{
-		var comparisonResults = new List<ComparisonResult>();
-		
-		foreach (ComparisonType t in Enum.GetValues(typeof(ComparisonType)))
-		{
-			comparisonResults.Add(nameOne.Matches(nameTwo, t.GetComparer()));
-		}
-		//add result to Comparison
+		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Matches(nameToCompare, t.GetComparer())).ToList();
 
-		return comparisonResults;
-		
-		//error and return ComparisonResults obj
+		//error handling and return ComparisonResults obj
 		//tests for this method
 	}
 	
-	
 	public ComparisonResult Matches(Name name)
 		=> Matches(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
+	
+	public ComparisonResult Matches(Name name, ComparisonType comparison)
+		=> Matches(name, comparison.GetComparer());
 
+	public ComparisonResult Matches(Name name, IEqualityComparer<Name> comparer)
+		=> new ComparisonResult()
+		{
+			Method = comparer.GetType().Name,
+			IsMatch = comparer.Equals(this, name),
+			Confidence = 0
+		};
+	
+	public bool MatchesAny(IEnumerable<Name> names, ComparisonType comparison)
+		=> names.Any(x => Matches(x, comparison.GetComparer()).IsMatch);
+	
 	/// <summary>
 	/// Matches a name string to a name object parts using desired comparison
 	/// </summary>
@@ -77,52 +82,19 @@ public sealed class Name
 	/// <returns></returns>
 	public bool Contains(string name)
 		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
-
-
-	public bool Contains(Name name)
-		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
-
-	public bool Contains(Name name, ComparisonType comparison)
-		=> Contains(name, comparison.GetComparer());
-
-	public bool Matches(Name name, ComparisonType comparison)
-		=> Matches(name, comparison.GetComparer());
-
-	// public bool Matches(Name name, ComparisonType comparison)
-	// 	=> Matches(name, comparison.GetComparer());
-
-
-	public ComparisonResult Matches(Name name, ComparisonType comparison)
-		=> Matches(name, comparison.GetComparer());
 	
-	public bool MatchesAny(IEnumerable<Name> names, ComparisonType comparison)
-		=> names.Any(x => Matches(x, comparison.GetComparer()).IsMatch);
-
-
+	private bool Contains(Name name, ComparerBase comparer)
+		=> comparer.Contains(this, name);
+	
+	public bool Contains(string name, ComparerBase comparer)
+		=> comparer.Contains(this, name);
+	
 	public double GetConfidence(Name name, ComparisonType comparison)
 		=> GetConfidence(name, comparison.GetComparer());
 
 	private double GetConfidence(Name name, ComparerBase comparer)
 		=> comparer.GetConfidence(this, name);
-
-	private bool Contains(string name, ComparerBase comparer)
-		=> comparer.Contains(this, name);
-
-	private bool Contains(Name name, ComparerBase comparer)
-
-	public ComparisonResult Matches(Name name, IEqualityComparer<Name> comparer)
-		=> new ComparisonResult()
-		{
-			Method = comparer.GetType().ToString(),
-			IsMatch = comparer.Equals(this, name),
-			Confidence = 0
-		};
 	
-	// public bool Matches(Name name, IEqualityComparer<Name> comparer)
-	// 	=> comparer.Equals(this, name);
-	public bool Contains(string name, ComparerBase comparer)
-		=> comparer.Contains(this, name);
-
 	// kept for future development
 	private static Name Parse(string fullName)
 	{
