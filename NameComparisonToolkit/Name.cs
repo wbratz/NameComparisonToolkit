@@ -1,5 +1,4 @@
 ﻿using NameComparisonToolkit.Comparers;
-using System.Runtime.CompilerServices;
 
 namespace NameComparisonToolkit;
 
@@ -83,18 +82,29 @@ public sealed class Name
 	/// <param name="suffix">A string representing the name suffix.</param>
 	public Name(IEnumerable<string> firstName, IEnumerable<string> middleName, IEnumerable<string> lastName, string suffix)
 	{
-		FirstName = firstName ?? Enumerable.Empty<string>();
-		MiddleName = middleName ?? Enumerable.Empty<string>();
-		LastName = lastName ?? Enumerable.Empty<string>();
+		FirstName = firstName;
+		MiddleName = middleName;
+		LastName = lastName;
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="nameToCompare">The name object to compare.</param>
+	/// <returns>List of all Match results</returns>
+	public IEnumerable<ComparisonResult> Matches(Name nameToCompare) //TODO:potentially Rename to RunMatches GetMatches
+	{
+		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Compare(nameToCompare, t.GetComparer())).ToList();
+	}
+	
 	/// <summary>
 	/// Determines if the given name object matches the current name object using the ExactMatchIgnoreCase comparer.
 	/// </summary>
 	/// <param name="name">The name object to compare.</param>
 	/// <returns>True if the names match, otherwise false.</returns>
-	public bool Matches(Name name)
-		=> Matches(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
+	public ComparisonResult Compare(Name name)
+		=> Compare(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
 	/// <summary>
 	/// Determines if the given name object matches the current name object using the specified comparison type.
@@ -102,8 +112,8 @@ public sealed class Name
 	/// <param name="name">The name object to compare.</param>
 	/// <param name="comparison">The comparison type to use.</param>
 	/// <returns>True if the names match, otherwise false.</returns>
-	public bool Matches(Name name, ComparisonType comparison)
-		=> Matches(name, comparison.GetComparer());
+	public ComparisonResult Compare(Name name, ComparisonType comparison)
+		=> Compare(name, comparison.GetComparer());
 
 	/// <summary>
 	/// Determines if the given name object matches the current name object using the specified comparer.
@@ -111,8 +121,13 @@ public sealed class Name
 	/// <param name="name">The name object to compare.</param>
 	/// <param name="comparer">The comparer to use.</param>
 	/// <returns>True if the names match, otherwise false.</returns>
-	public bool Matches(Name name, IEqualityComparer<Name> comparer)
-		=> comparer.Equals(this, name);
+	public ComparisonResult Compare(Name name, IEqualityComparer<Name> comparer)
+		=> new()
+		{
+			Method = comparer.GetType().Name,
+			IsMatch = comparer.Equals(this, name),
+			Confidence = 0
+		};
 
 	/// <summary>
 	/// Determines if the current name object matches any of the names in the given enumerable using the specified comparison type.
@@ -121,13 +136,12 @@ public sealed class Name
 	/// <param name="comparison">The comparison type to use.</param>
 	/// <returns>True if the current name object matches any name in the enumerable, otherwise false.</returns>
 	public bool MatchesAny(IEnumerable<Name> names, ComparisonType comparison)
-		=> names.Any(x => Matches(x, comparison.GetComparer()));
+		=> names.Any(x => Compare(x, comparison.GetComparer()).IsMatch);
 
 	/// <summary>
 	/// Determines if the given name object matches the current name object, ignoring the order of the name parts, using the ExactMatchIgnoreCase comparer.
 	/// </summary>
 	/// <param name="name">The name object to compare.</param>
-	/// <param name="comparison">The comparison type to use.</param>
 	/// <returns>True if the name objects match when ignoring the order of the name parts, otherwise false.</returns>
 	public bool MatchesIgnoreOrder(Name name)
 		=> MatchesIgnoreOrder(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
@@ -180,7 +194,7 @@ public sealed class Name
 	/// Calculates the confidence score for the similarity between the current name object and the given name object using the specified comparer.
 	/// </summary>
 	/// <param name="name">The name object to compare.</param>
-	/// <param name="comparer">The comparer to use.</param>
+	/// <param name="comparison">The comparer to use.</param>
 	/// <returns>A double value representing the confidence score.</returns>
 	public double GetConfidence(Name name, ComparisonType comparison)
 		=> GetConfidence(name, comparison.GetComparer());
