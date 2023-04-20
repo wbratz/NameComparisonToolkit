@@ -14,7 +14,7 @@ public sealed class Name
 		=> string.Join(" ", new string[]
 		{
 			string.Join(" ", FirstName),
-			string.Join("", MiddleName),
+			string.Join(" ", MiddleName),
 			string.Join(" ", LastName),
 			includeSuffix ? Suffix : string.Empty
 		}.Where(x => !string.IsNullOrEmpty(x)));
@@ -61,6 +61,12 @@ public sealed class Name
 	public bool Contains(string name)
 		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
+	public bool Contains(Name name)
+		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
+
+	public bool Contains(Name name, ComparisonType comparison)
+		=> Contains(name, comparison.GetComparer());
+
 	public bool Matches(Name name, ComparisonType comparison)
 		=> Matches(name, comparison.GetComparer());
 
@@ -70,7 +76,16 @@ public sealed class Name
 	public bool Matches(Name name, IEqualityComparer<Name> comparer)
 		=> comparer.Equals(this, name);
 
-	public bool Contains(string name, ComparerBase comparer)
+	public double GetConfidence(Name name, ComparisonType comparison)
+		=> GetConfidence(name, comparison.GetComparer());
+
+	private double GetConfidence(Name name, ComparerBase comparer)
+		=> comparer.GetConfidence(this, name);
+
+	private bool Contains(string name, ComparerBase comparer)
+		=> comparer.Contains(this, name);
+
+	private bool Contains(Name name, ComparerBase comparer)
 		=> comparer.Contains(this, name);
 
 	// kept for future development

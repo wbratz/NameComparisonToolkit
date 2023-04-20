@@ -14,6 +14,9 @@ public sealed class Last : ComparerBase
 	public override double GetConfidence(Name x, Name y)
 		=> ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "));
 
+	public override bool Contains(Name x, Name y)
+		=> y.LastName.Intersect(x.LastName).Any();
+
 	public override int GetHashCode(Name obj)
 		=> obj switch
 		{

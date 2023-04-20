@@ -28,6 +28,10 @@ public sealed class FirstLast : ComparerBase
 		=> ConfidenceBuilder.Build(x.FirstName.Join(" "), y.FirstName.Join(" "))
 			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "));
 
+	public override bool Contains(Name x, Name y)
+		=> y.FirstName.Intersect(x.FirstName).Any()
+			&& y.LastName.Intersect(x.LastName).Any();
+
 	private static bool CompareTokens(Name x, Name y)
 	{
 		var xTokens = x.GetTokenizedName(true);
