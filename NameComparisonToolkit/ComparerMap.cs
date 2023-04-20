@@ -1,6 +1,6 @@
-﻿using NameMatching.Comparers;
+﻿using NameComparisonToolkit.Comparers;
 
-namespace NameMatching;
+namespace NameComparisonToolkit;
 
 public static class ComparerMap
 {

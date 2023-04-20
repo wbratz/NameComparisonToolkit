@@ -1,4 +1,4 @@
-﻿namespace NameMatching.Tests;
+﻿namespace NameComparisonToolkit.Tests;
 public class LastNameTests
 {
 	[Theory]

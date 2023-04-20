@@ -1,4 +1,4 @@
-﻿namespace NameMatching.Comparers;
+﻿namespace NameComparisonToolkit.Comparers;
 
 public abstract class ComparerBase : IEqualityComparer<Name>
 {
@@ -17,7 +17,6 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 		return sortedXName.SequenceEqual(sortedYName, StringComparer.InvariantCultureIgnoreCase);
 	}
 
-
 	protected static bool CompareOptionalString(string x, string y)
 		=> ReferenceEquals(x, y)
 			|| string.IsNullOrEmpty(x) && string.IsNullOrEmpty(y)
@@ -25,5 +24,6 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 
 	public abstract bool Equals(Name x, Name y);
 	public abstract bool Contains(Name x, string y);
+	public abstract double GetConfidence(Name x, Name y);
 	public abstract int GetHashCode(Name obj);
 }

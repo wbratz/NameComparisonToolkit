@@ -1,17 +1,18 @@
-﻿namespace NameMatching.Comparers;
+﻿using NameComparisonToolkit.Confidence;
+using NameComparisonToolkit.Extensions;
 
-public sealed class FirstLastSuffix : ComparerBase
+namespace NameComparisonToolkit.Comparers;
+
+public sealed class FirstLast : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
 		=> (CompareRequiredNamePart(x.FirstName, y.FirstName)
-				&& CompareRequiredNamePart(x.LastName, y.LastName)
-				&& CompareRequiredString(x.Suffix, y.Suffix))
-			   || CompareTokens(x, y);
+			&& CompareRequiredNamePart(x.LastName, y.LastName))
+			|| CompareTokens(x, y);
 
 	public override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.FirstName))
-			&& y.Contains(string.Join(" ", x.LastName))
-			&& y.Contains(string.Join(" ", x.Suffix));
+			&& y.Contains(string.Join(" ", x.LastName));
 
 	public override int GetHashCode(Name obj)
 		=> obj switch
@@ -21,8 +22,11 @@ public sealed class FirstLastSuffix : ComparerBase
 					 => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(firstName.ToLowerInvariant()))
 				 ^ obj.LastName.Aggregate(0, (hash, lastName)
 					 => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
-				 ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
+
+	public override double GetConfidence(Name x, Name y)
+		=> ConfidenceBuilder.Build(x.FirstName.Join(" "), y.FirstName.Join(" "))
+			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "));
 
 	private static bool CompareTokens(Name x, Name y)
 	{
@@ -30,6 +34,7 @@ public sealed class FirstLastSuffix : ComparerBase
 		var yTokens = y.GetTokenizedName(true);
 
 		return xTokens.Count == yTokens.Count
-			  && !xTokens.Except(yTokens, StringComparer.InvariantCultureIgnoreCase).Any();
+			&& !xTokens.Except(yTokens, StringComparer.InvariantCultureIgnoreCase).Any();
 	}
 }
+

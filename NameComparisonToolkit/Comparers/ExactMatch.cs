@@ -1,4 +1,7 @@
-﻿namespace NameMatching.Comparers;
+﻿using NameComparisonToolkit.Confidence;
+using NameComparisonToolkit.Extensions;
+
+namespace NameComparisonToolkit.Comparers;
 
 public sealed class ExactMatch : ComparerBase
 {
@@ -25,6 +28,12 @@ public sealed class ExactMatch : ComparerBase
 				 ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
 	}
+
+	public override double GetConfidence(Name x, Name y)
+		=> ConfidenceBuilder.Build(x.FirstName.Join(" "), y.FirstName.Join(" "))
+			* ConfidenceBuilder.Build(x.MiddleName.Join(" "), y.MiddleName.Join(" "))
+			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "))
+			* ConfidenceBuilder.Build(x.Suffix, y.Suffix);
 
 	private static bool CompareTokens(Name x, Name y)
 	{
