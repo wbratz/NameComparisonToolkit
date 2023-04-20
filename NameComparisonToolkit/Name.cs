@@ -1,4 +1,4 @@
-﻿using NameComparisonToolkit.Comparers;
+using NameComparisonToolkit.Comparers;
 
 namespace NameComparisonToolkit;
 
@@ -78,7 +78,7 @@ public sealed class Name
 	public bool Contains(string name)
 		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
-<<<<<<< refs/remotes/origin/master:NameComparisonToolkit/Name.cs
+
 	public bool Contains(Name name)
 		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
 
@@ -87,10 +87,10 @@ public sealed class Name
 
 	public bool Matches(Name name, ComparisonType comparison)
 		=> Matches(name, comparison.GetComparer());
-=======
+
 	// public bool Matches(Name name, ComparisonType comparison)
 	// 	=> Matches(name, comparison.GetComparer());
->>>>>>> updating Match methods to return ComparisonResult, wip:NameMatching/Name.cs
+
 
 	public ComparisonResult Matches(Name name, ComparisonType comparison)
 		=> Matches(name, comparison.GetComparer());
@@ -98,7 +98,7 @@ public sealed class Name
 	public bool MatchesAny(IEnumerable<Name> names, ComparisonType comparison)
 		=> names.Any(x => Matches(x, comparison.GetComparer()).IsMatch);
 
-<<<<<<< refs/remotes/origin/master:NameComparisonToolkit/Name.cs
+
 	public double GetConfidence(Name name, ComparisonType comparison)
 		=> GetConfidence(name, comparison.GetComparer());
 
@@ -109,7 +109,7 @@ public sealed class Name
 		=> comparer.Contains(this, name);
 
 	private bool Contains(Name name, ComparerBase comparer)
-=======
+
 	public ComparisonResult Matches(Name name, IEqualityComparer<Name> comparer)
 		=> new ComparisonResult()
 		{
@@ -121,7 +121,6 @@ public sealed class Name
 	// public bool Matches(Name name, IEqualityComparer<Name> comparer)
 	// 	=> comparer.Equals(this, name);
 	public bool Contains(string name, ComparerBase comparer)
->>>>>>> updating Match methods to return ComparisonResult, wip:NameMatching/Name.cs
 		=> comparer.Contains(this, name);
 
 	// kept for future development
