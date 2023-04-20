@@ -35,9 +35,9 @@ public sealed class Name
 	}
 	public Name(IEnumerable<string> firstName, IEnumerable<string> middleName, IEnumerable<string> lastName, string suffix)
 	{
-		FirstName = firstName ?? Enumerable.Empty<string>();
-		MiddleName = middleName ?? Enumerable.Empty<string>();
-		LastName = lastName ?? Enumerable.Empty<string>();
+		FirstName = firstName;
+		MiddleName = middleName;
+		LastName = lastName;
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
