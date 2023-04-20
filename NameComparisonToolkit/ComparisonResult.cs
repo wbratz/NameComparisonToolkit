@@ -1,4 +1,4 @@
-﻿namespace NameMatching;
+﻿namespace NameComparisonToolkit;
 
 public sealed class ComparisonResult
 {
