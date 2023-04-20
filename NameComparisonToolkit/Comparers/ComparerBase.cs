@@ -22,8 +22,12 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 			|| string.IsNullOrEmpty(x) && string.IsNullOrEmpty(y)
 			|| string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
 
+	protected static (IEnumerable<string> compareTo, IEnumerable<string> compareAgainst) GetComparers(IEnumerable<string> x, IEnumerable<string> y)
+		=> x.Count() > y.Count() ? (x, y) : (y, x);
+
 	public abstract bool Equals(Name x, Name y);
 	public abstract bool Contains(Name x, string y);
+	public abstract bool Contains(Name x, Name y);
 	public abstract double GetConfidence(Name x, Name y);
 	public abstract int GetHashCode(Name obj);
 }

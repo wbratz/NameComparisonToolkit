@@ -32,6 +32,10 @@ public sealed class FirstLastSuffix : ComparerBase
 			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "))
 			* ConfidenceBuilder.Build(x.Suffix, y.Suffix);
 
+	public override bool Contains(Name x, Name y)
+		=> y.FirstName.Intersect(x.FirstName).Any()
+			&& y.LastName.Intersect(x.LastName).Any()
+			&& CompareRequiredString(x.Suffix, y.Suffix);
 
 	private static bool CompareTokens(Name x, Name y)
 	{
