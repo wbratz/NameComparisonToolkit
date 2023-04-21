@@ -41,32 +41,7 @@ public class NameTests
 
 		name1.Compare(name2).IsMatch.Should().BeFalse();
 	}
-
-	[Fact]
-	public void MatchesAny_ShouldReturnTrueForMatchingNamesInList()
-	{
-		var name1 = new Name("John", "Adam", "Smith", "Jr.");
-		var names = new List<Name>
-		{
-			new Name("Jane", "Adam", "Smith", "Jr."),
-			new Name("John", "Adam", "Smith", "Jr.")
-		};
-
-		name1.MatchesAny(names, ComparisonType.ExactMatchIgnoreCase).Should().BeTrue();
-	}
-
-	[Fact]
-	public void MatchesAny_ShouldReturnFalseForNonMatchingNamesInList()
-	{
-		var name1 = new Name("John", "Adam", "Smith", "Jr.");
-		var names = new List<Name>
-		{
-			new Name("Jane", "Adam", "Smith", "Jr."),
-			new Name("John", "Adam", "Doe", "Jr.")
-		};
-
-		name1.MatchesAny(names, ComparisonType.ExactMatchIgnoreCase).Should().BeFalse();
-	}
+	
 
 	[Fact]
 	public void GetMatchResults_ShouldReturnResultCount_EqualToComparisonTypeCount()
@@ -75,7 +50,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
-		var result = name1.GetMatchResults(name2);
+		var result = name1.Matches(name2);
 
 		result.Count().Should().Be(typeCount);
 	}
@@ -87,7 +62,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
-		var result = name1.GetContainResults(name2);
+		var result = name1.Contains(name2);
 
 		result.Count().Should().Be(typeCount);
 	}
@@ -99,7 +74,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John Adam", "Joel", "Smith", "Jr.");
 
-		var result = name1.GetIntersectResults(name2);
+		var result = name1.Intersects(name2);
 
 		result.Count().Should().Be(typeCount);
 	}

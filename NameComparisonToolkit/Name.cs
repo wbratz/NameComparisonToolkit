@@ -26,14 +26,9 @@ public sealed class Name
 	/// A string representing the name suffix.
 	/// </summary>
 	public string Suffix { get; }
-
-	/// <summary>
-	/// Generates a full name string by concatenating the first name, middle name, last name, and suffix (if specified).
-	/// </summary>
-	/// <param name="includeSuffix">A boolean value indicating whether to include the suffix in the full name. Default is true.</param>
-	/// <returns>A string representing the full name.</returns>
-	public string GetFullName(bool includeSuffix = true)
-		=> string.Join(" ", new string[]
+	
+	private string GetFullName(bool includeSuffix = true)
+		=> string.Join(" ", new[]
 		{
 		string.Join(" ", FirstName),
 		string.Join(" ", MiddleName),
@@ -94,7 +89,7 @@ public sealed class Name
 	/// </summary>
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of all Match results</returns>
-	public IEnumerable<ComparisonResult> GetMatchResults(Name nameToCompare) 
+	public IEnumerable<ComparisonResult> Matches(Name nameToCompare) 
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Compare(nameToCompare, t.GetComparer())).ToList();
 	}
@@ -104,7 +99,7 @@ public sealed class Name
 	/// </summary>
 	/// <param name="nameToCompare"></param>
 	/// <returns></returns>
-	public IEnumerable<ComparisonResult> GetContainResults(Name nameToCompare) 
+	public IEnumerable<ComparisonResult> Contains(Name nameToCompare) 
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Contains(nameToCompare.GetFullName(), t.GetComparer())).ToList();
 	}
@@ -114,7 +109,7 @@ public sealed class Name
 	/// </summary>
 	/// <param name="nameToCompare"></param>
 	/// <returns></returns>
-	public IEnumerable<ComparisonResult> GetIntersectResults(Name nameToCompare)
+	public IEnumerable<ComparisonResult> Intersects(Name nameToCompare)
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Intersects(nameToCompare, t.GetComparer())).ToList();
 	}
@@ -126,115 +121,21 @@ public sealed class Name
 	/// <returns>True if the names match, otherwise false.</returns>
 	public ComparisonResult Compare(Name name)
 		=> Compare(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
-
-	/// <summary>
-	/// Determines if the given name object matches the current name object using the specified comparison type.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <param name="comparison">The comparison type to use.</param>
-	/// <returns>True if the names match, otherwise false.</returns>
-	public ComparisonResult Compare(Name name, ComparisonType comparison)
-		=> Compare(name, comparison.GetComparer());
-
-	/// <summary>
-	/// Determines if the given name object matches the current name object using the specified comparer.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <param name="comparer">The comparer to use.</param>
-	/// <returns>True if the names match, otherwise false.</returns>
-	public ComparisonResult Compare(Name name, IEqualityComparer<Name> comparer)
+	
+	private ComparisonResult Compare(Name name, ComparerBase comparer)
 		=> new()
 		{
 			Method = comparer.GetType().Name,
 			IsMatch = comparer.Equals(this, name),
-			Confidence = 0
+			Confidence = 0 //(float)comparer.GetConfidence(this, name)
 		};
 
-	/// <summary>
-	/// Determines if the current name object matches any of the names in the given enumerable using the specified comparison type.
-	/// </summary>
-	/// <param name="names">An enumerable of name objects.</param>
-	/// <param name="comparison">The comparison type to use.</param>
-	/// <returns>True if the current name object matches any name in the enumerable, otherwise false.</returns>
-	public bool MatchesAny(IEnumerable<Name> names, ComparisonType comparison)
-		=> names.Any(x => Compare(x, comparison.GetComparer()).IsMatch);
-
-	/// <summary>
-	/// Determines if the given name object matches the current name object, ignoring the order of the name parts, using the ExactMatchIgnoreCase comparer.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <returns>True if the name objects match when ignoring the order of the name parts, otherwise false.</returns>
-	public bool MatchesIgnoreOrder(Name name)
-		=> MatchesIgnoreOrder(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
-
-	/// <summary>
-	/// Determines if the given name object matches the current name object, ignoring the order of the name parts, using the specified comparison type.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <param name="comparison">The comparison type to use.</param>
-	/// <returns>True if the name objects match when ignoring the order of the name parts, otherwise false.</returns>
-	public bool MatchesIgnoreOrder(Name name, ComparisonType comparison)
-		=> MatchesIgnoreOrder(name, comparison.GetComparer());
-
-	/// <summary>
-	/// Determines if the given name string is contained within the current name object using the specified comparison type.
-	/// </summary>
-	/// <param name="name">The name string to compare.</param>
-	/// <param name="comparison">The comparison type to use.</param>
-	/// <returns>True if the name string is contained within the current name object, otherwise false.</returns>
-	public ComparisonResult Contains(string name, ComparisonType comparison)
-		=> Contains(name, comparison.GetComparer());
-
-	/// <summary>
-	/// Determines if the given name string is contained within the current name object using the ExactMatchIgnoreCase comparer.
-	/// All parts of the name object must be contained in the string.
-	/// </summary>
-	/// <param name="name">The name string to compare.</param>
-	/// <returns>True if the name string is contained within the current name object, otherwise false.</returns>
-	public ComparisonResult Contains(string name)
-		=> Contains(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
-
-	/// <summary>
-	/// Determines if the given name object intersects with the current name object using the ExactMatchIgnoreCase comparer.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <returns>True if the name object intersects with the current name object, otherwise false.</returns>
-	public ComparisonResult Intersects(Name name)
-		=> Intersects(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
-
-	/// <summary>
-	/// Determines if the given name object intersects with the current name object using the specified comparison type.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <param name="comparison">The comparison type to use.</param>
-	/// <returns>True if the name object intersects with the current name object, otherwise false.</returns>
-	public ComparisonResult Intersects(Name name, ComparisonType comparison)
-		=> Intersects(name, comparison.GetComparer());
-
-	/// <summary>
-	/// Calculates the confidence score for the similarity between the current name object and the given name object using the specified comparer.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <param name="comparison">The comparer to use.</param>
-	/// <returns>A double value representing the confidence score.</returns>
-	public double GetConfidence(Name name, ComparisonType comparison)
-		=> GetConfidence(name, comparison.GetComparer());
-
-	private bool MatchesIgnoreOrder(Name name, ComparerBase comparer)
-		=> comparer.EqualsIgnoreOrder(this, name);
-
-	private double GetConfidence(Name name, ComparerBase comparer)
-		=> comparer.GetConfidence(this, name);
-
-	// private ComparisonResult Contains(string name, ComparerBase comparer)
-	// 	=> comparer.Contains(this, name);
-	
-	public ComparisonResult Contains(string name, ComparerBase comparer)
+	private ComparisonResult Contains(string name, ComparerBase comparer)
 		=> new()
 		{
 			Method = comparer.GetType().Name,
 			IsMatch = comparer.Contains(this, name),
-			Confidence = 0
+			Confidence = 0 //comparer.GetConfidence(this, name)
 		};
 
 	private ComparisonResult Intersects(Name name, ComparerBase comparer)
@@ -242,7 +143,7 @@ public sealed class Name
 		{
 			Method = comparer.GetType().Name,
 			IsMatch = comparer.Intersects(this, name),
-			Confidence = 0
+			Confidence = 0 //comparer.GetConfidence(this, name)
 		};
 
 	// kept for future development
@@ -297,7 +198,7 @@ public sealed class Name
 			? string.Empty
 			: suffix.Replace(".", "").ToLowerInvariant();
 
-	private static readonly string[] _suffixList = new[] {
+	private static readonly string[] _suffixList = {
 		"senior",
 		"junior",
 		"sr",
