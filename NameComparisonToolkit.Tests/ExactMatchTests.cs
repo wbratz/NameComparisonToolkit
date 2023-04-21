@@ -18,7 +18,7 @@ public class ExactMatchTests
 
 		var results = name1.Matches(name2).ToList();
 		
-		var exactMatchResult = results.Where(x => x.Method.Equals("ExactMatch")); 
+		var exactMatchResult = results.Where(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)); 
 		exactMatchResult?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
@@ -34,7 +34,7 @@ public class ExactMatchTests
 	
 		var results = name1.MatchesIgnoreOrder(name2).ToList();
 		
-		var exactMatchResult = results.Where(x => x.Method.Equals("ExactMatch")); 
+		var exactMatchResult = results.Where(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)); 
 		exactMatchResult?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 	
@@ -57,7 +57,7 @@ public class ExactMatchTests
 		
 		var results = name1.Intersects(name2).ToList();
 		
-		var exactMatchResult = results.Where(x => x.Method.Equals("ExactMatch")); 
+		var exactMatchResult = results.Where(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)); 
 		exactMatchResult?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 }

@@ -17,7 +17,7 @@ public class FirstLastTests
 
 		var allResults = name1.Matches(name2).ToList();
 		
-		var  results = allResults.Where(x => x.Method.Equals("FirstLast")); 
+		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLast));
 		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
@@ -31,7 +31,7 @@ public class FirstLastTests
 		var name2 = new Name(firstName2, lastName2);
 		var allResults = name1.MatchesIgnoreOrder(name2).ToList();
 		
-		var  results = allResults.Where(x => x.Method.Equals("FirstLast")); 
+		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLast));
 		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
@@ -58,7 +58,7 @@ public class FirstLastTests
 
 		var allResults = name1.Intersects(name2).ToList();
 		
-		var  results = allResults.Where(x => x.Method.Equals("FirstLast")); 
+		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLast));
 		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 		
 	}

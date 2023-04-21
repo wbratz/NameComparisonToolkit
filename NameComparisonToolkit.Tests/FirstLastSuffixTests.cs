@@ -18,7 +18,7 @@ public class FirstLastSuffixTests
 
 		var allResults = name1.Matches(name2).ToList();
 		
-		var  results = allResults.Where(x => x.Method.Equals("FirstLastSuffix")); 
+		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLastSuffix));
 		 results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
@@ -33,7 +33,7 @@ public class FirstLastSuffixTests
 
 		var allResults = name1.MatchesIgnoreOrder(name2).ToList();
 		
-		var  results = allResults.Where(x => x.Method.Equals("FirstLastSuffix")); 
+		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLastSuffix));
 		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
@@ -63,7 +63,7 @@ public class FirstLastSuffixTests
 
 		var allResults = name1.Intersects(name2).ToList();
 		
-		var  results = allResults.Where(x => x.Method.Equals("FirstLastSuffix")); 
+		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLastSuffix));
 		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 	
