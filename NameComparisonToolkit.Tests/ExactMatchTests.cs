@@ -8,8 +8,9 @@ public class ExactMatchTests
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Eve", "Smith", "Jr.", false)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Doe", "Jr.", false)]
 	[InlineData("John", "", "Smith Jones", "", "John", "", "Smith Jones", "", true)]
-	[InlineData("John", "", "Smith Jones", "", "John", "", "Jones Smith", "", true)]
+	[InlineData("John", "", "Smith Jones", "", "John", "", "Jones Smith", "", false)]
 	[InlineData("John", "", "Smith", "", "John", "", "Smith Jones", "", false)]
+	[InlineData("John James", "", "Smith", "", "James John", "", "Smith", "", false)]
 	public void Equals_ShouldCompareExactMatchCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);

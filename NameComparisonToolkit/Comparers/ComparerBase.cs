@@ -19,10 +19,10 @@ internal abstract class ComparerBase : IEqualityComparer<Name>
 
 	internal static bool CompareRequiredNamePart(IEnumerable<string> x, IEnumerable<string> y)
 	{
-		if (!x.Any() || !y.Any())
-		{
-			return false;
-		}
+		// if (!x.Any() || !y.Any())
+		// {
+		// 	return false;
+		// }
 
 		return x.SequenceEqual(y, StringComparer.InvariantCultureIgnoreCase);
 	}

@@ -10,8 +10,8 @@ internal sealed class ExactMatch : ComparerBase
 		return CompareRequiredNamePart(x.FirstName, y.FirstName)
 			   && CompareRequiredNamePart(x.MiddleName, y.MiddleName)
 			   && CompareRequiredNamePart(x.LastName, y.LastName)
-			   && CompareOptionalString(x.Suffix, y.Suffix)
-			   || CompareTokens(x, y);
+			   && CompareOptionalString(x.Suffix, y.Suffix);
+			   //|| CompareTokens(x, y);
 	}
 
 	internal override bool EqualsIgnoreOrder(Name x, Name y)

@@ -8,8 +8,8 @@ internal sealed class FirstLastSuffix : ComparerBase
 	public override bool Equals(Name x, Name y)
 		=> (CompareRequiredNamePart(x.FirstName, y.FirstName)
 				&& CompareRequiredNamePart(x.LastName, y.LastName)
-				&& CompareRequiredString(x.Suffix, y.Suffix))
-			   || CompareTokens(x, y);
+				&& CompareRequiredString(x.Suffix, y.Suffix));
+			   //|| CompareTokens(x, y);
 
 	internal override bool EqualsIgnoreOrder(Name x, Name y)
 		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
