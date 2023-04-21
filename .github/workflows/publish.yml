@@ -25,9 +25,8 @@ jobs:
 
     - name: Check if package version exists
       run: |
-        wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-        PACKAGE_VERSION=$(dotnet list package --outdated | grep 'NameComparisonToolkit' | awk '{print $2}')
-        EXISTS=$(mono nuget.exe search NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
+        PACKAGE_VERSION=$(grep -oP '(?<=<Version>).*(?=</Version>)' NameComparisonToolkit/NameComparisonToolkit.csproj)
+        EXISTS=$(nuget search NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
         echo "PACKAGE_VERSION_EXISTS=$EXISTS" >> $GITHUB_ENV
 
     - name: Fail if package version exists
