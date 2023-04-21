@@ -40,5 +40,6 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 	public abstract bool Contains(Name x, string y);
 	public abstract bool Intersects(Name x, Name y);
 	public abstract double GetConfidence(Name x, Name y);
+	//public abstract double GetConfidence(Name x, string y);
 	public abstract int GetHashCode(Name obj);
 }
