@@ -17,9 +17,9 @@ public class FirstLastSuffixTests
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
 		var allResults = name1.Matches(name2).ToList();
-		
+
 		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLastSuffix));
-		 results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
+		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -32,7 +32,7 @@ public class FirstLastSuffixTests
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
 		var allResults = name1.MatchesIgnoreOrder(name2).ToList();
-		
+
 		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLastSuffix));
 		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
@@ -62,10 +62,10 @@ public class FirstLastSuffixTests
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
 		var allResults = name1.Intersects(name2).ToList();
-		
+
 		var  results = allResults.Where(x => x.ComparisonType.Equals(ComparisonType.FirstLastSuffix));
 		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
-	
+
 	//TODo: Contains Tests??
 }

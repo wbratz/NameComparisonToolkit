@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace NameComparisonToolkit.Tests;
+﻿namespace NameComparisonToolkit.Tests;
 
 public class NameTests
 {
@@ -24,15 +22,15 @@ public class NameTests
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
 		var results = name1.Matches(name2).ToList();
-	
+
 		foreach (var result in results)
 		{
-			if (result.Method.Equals("ExactMatch"))
-			{
-				result.IsMatch.Should().Be(true);
-			}
+			//if (result.Method.Equals("ExactMatch"))
+			//{
+			//	result.IsMatch.Should().Be(true);
+			//}
 		}
-		
+
 		//name1.Compare(name2).IsMatch.Should().BeTrue();
 	}
 

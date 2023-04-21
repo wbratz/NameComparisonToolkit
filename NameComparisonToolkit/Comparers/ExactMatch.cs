@@ -37,9 +37,9 @@ internal sealed class ExactMatch : ComparerBase
 	}
 
 	internal override double GetSimilarity(Name x, Name y)
-		=> SimilarityBuilder.Build(x.FirstName.Join(" ").ToLowerInvariant(), y.FirstName.Join(" ").ToLowerInvariant())
-			* SimilarityBuilder.Build(x.MiddleName.Join(" ").ToLowerInvariant(), y.MiddleName.Join(" ").ToLowerInvariant())
-			* SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant())
+		=> SimilarityBuilder.Build(string.Join(" ", x.FirstName).ToLowerInvariant(), string.Join(" ", y.FirstName).ToLowerInvariant())
+			* SimilarityBuilder.Build(string.Join(" ", x.MiddleName).ToLowerInvariant(), string.Join(" ", y.MiddleName).ToLowerInvariant())
+			* SimilarityBuilder.Build(string.Join(" ", x.LastName).ToLowerInvariant(), string.Join(" ", y.LastName).ToLowerInvariant())
 			* SimilarityBuilder.Build(x.Suffix.ToLowerInvariant(), y.Suffix.ToLowerInvariant());
 
 	internal override double GetSimilarity(Name x, string y)

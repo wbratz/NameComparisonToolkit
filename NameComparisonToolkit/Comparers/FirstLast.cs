@@ -3,7 +3,7 @@ using NameComparisonToolkit.Similarity;
 
 namespace NameComparisonToolkit.Comparers;
 
-public sealed class FirstLast : ComparerBase
+internal sealed class FirstLast : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
 		=> (CompareRequiredNamePart(x.FirstName, y.FirstName)
