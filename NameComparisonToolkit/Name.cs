@@ -94,7 +94,7 @@ public sealed class Name
 	/// </summary>
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of all Match results</returns>
-	public IEnumerable<ComparisonResult> GetMatchResults(Name nameToCompare) //TODO:potentially Rename to RunMatches GetMatches
+	public IEnumerable<ComparisonResult> GetMatchResults(Name nameToCompare) 
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Compare(nameToCompare, t.GetComparer())).ToList();
 	}
@@ -104,7 +104,7 @@ public sealed class Name
 	/// </summary>
 	/// <param name="nameToCompare"></param>
 	/// <returns></returns>
-	public IEnumerable<ComparisonResult> GetContainResults(Name nameToCompare) //TODO:potentially Rename? param string or NameObject??
+	public IEnumerable<ComparisonResult> GetContainResults(Name nameToCompare) 
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Contains(nameToCompare.GetFullName(), t.GetComparer())).ToList();
 	}
