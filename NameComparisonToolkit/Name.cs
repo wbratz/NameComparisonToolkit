@@ -1,4 +1,5 @@
 ﻿using NameComparisonToolkit.Comparers;
+using NameComparisonToolkit.Extensions;
 
 namespace NameComparisonToolkit;
 
@@ -67,9 +68,9 @@ public sealed class Name
 	/// <param name="suffix">A string representing the name suffix.</param>
 	public Name(string firstName, string middleName, string lastName, string suffix)
 	{
-		FirstName = firstName != null ? firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
-		MiddleName = middleName != null ? middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
-		LastName = lastName != null ? lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
+		FirstName = firstName.IsNullOrWhiteSpace() ?  Enumerable.Empty<string>() : firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		MiddleName = middleName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		LastName = lastName.IsNullOrWhiteSpace() ?  Enumerable.Empty<string>() : lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
@@ -98,12 +99,22 @@ public sealed class Name
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Compare(nameToCompare, t.GetComparer())).ToList();
 	}
 	
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="nameToCompare"></param>
+	/// <returns></returns>
 	public IEnumerable<ComparisonResult> GetContainResults(Name nameToCompare) //TODO:potentially Rename? param string or NameObject??
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Contains(nameToCompare.GetFullName(), t.GetComparer())).ToList();
 	}
 
-	public IEnumerable<ComparisonResult> GetInstersectResults(Name nameToCompare)
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="nameToCompare"></param>
+	/// <returns></returns>
+	public IEnumerable<ComparisonResult> GetIntersectResults(Name nameToCompare)
 	{
 		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Intersects(nameToCompare, t.GetComparer())).ToList();
 	}

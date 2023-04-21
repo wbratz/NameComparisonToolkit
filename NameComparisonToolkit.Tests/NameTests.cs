@@ -67,7 +67,7 @@ public class NameTests
 
 		name1.MatchesAny(names, ComparisonType.ExactMatchIgnoreCase).Should().BeFalse();
 	}
-	
+
 	[Fact]
 	public void GetMatchResults_ShouldReturnResultCount_EqualToComparisonTypeCount()
 	{
@@ -99,7 +99,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John Adam", "Joel", "Smith", "Jr.");
 
-		var result = name1.GetInstersectResults(name2);
+		var result = name1.GetIntersectResults(name2);
 
 		result.Count().Should().Be(typeCount);
 	}
