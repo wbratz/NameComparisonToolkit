@@ -2,9 +2,8 @@
 
 internal enum ComparisonType
 {
-	ExactMatchIgnoreCase = 0,
-	FirstNameLastNameIgnoreCase = 1,
-	NoMatch = 2,
-	LastNameIgnoreCase = 3,
-	FirstLastSuffixIgnoreCase = 4
+	ExactMatch = 0,
+	FirstLast = 1,
+	Last = 3,
+	FirstLastSuffix = 4
 }

@@ -12,10 +12,10 @@ internal static class ComparerMap
 	public static ComparerBase GetComparer(this ComparisonType comparison)
 		=> comparison switch
 		{
-			ComparisonType.ExactMatchIgnoreCase => ExactMatchIgnoreCase,
-			ComparisonType.FirstNameLastNameIgnoreCase => FirstNameLastNameIgnoreCase,
-			ComparisonType.LastNameIgnoreCase => LastNameIgnoreCase,
-			ComparisonType.FirstLastSuffixIgnoreCase => FirstLastSuffixIgnoreCase,
+			ComparisonType.ExactMatch => ExactMatchIgnoreCase,
+			ComparisonType.FirstLast => FirstNameLastNameIgnoreCase,
+			ComparisonType.Last => LastNameIgnoreCase,
+			ComparisonType.FirstLastSuffix => FirstLastSuffixIgnoreCase,
 			_ => ExactMatchIgnoreCase,
 		};
 }

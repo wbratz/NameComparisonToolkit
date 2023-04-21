@@ -10,13 +10,16 @@ public class FirstLastSuffixTests
 	[InlineData("John", "", "Smith Jones", "", "John", "", "Smith Jones", "", true)]
 	[InlineData("John", "D", "Smith Jones", "", "John", "", "Jones Smith", "", false)]
 	[InlineData("John", "", "Smith", "", "John", "", "Smith Jones", "", false)]
+	[InlineData("John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Doe Smith", "Jr.", false)]
 	public void Equals_ShouldCompareFirstLastSuffixCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
-		var comparer = new FirstLastSuffix();
-		comparer.Equals(name1, name2).Should().Be(expectedResult);
+		var allResults = name1.Matches(name2).ToList();
+		
+		var  results = allResults.Where(x => x.Method.Equals("FirstLastSuffix")); 
+		 results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -28,8 +31,10 @@ public class FirstLastSuffixTests
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
-		var comparer = new FirstLastSuffix();
-		comparer.EqualsIgnoreOrder(name1, name2).Should().Be(expectedResult);
+		var allResults = name1.MatchesIgnoreOrder(name2).ToList();
+		
+		var  results = allResults.Where(x => x.Method.Equals("FirstLastSuffix")); 
+		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -56,7 +61,11 @@ public class FirstLastSuffixTests
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
-		var comparer = new FirstLastSuffix();
-		comparer.Intersects(name1, name2).Should().Be(expectedResult);
+		var allResults = name1.Intersects(name2).ToList();
+		
+		var  results = allResults.Where(x => x.Method.Equals("FirstLastSuffix")); 
+		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
+	
+	//TODo: Contains Tests??
 }

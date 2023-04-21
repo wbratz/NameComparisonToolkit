@@ -15,8 +15,10 @@ public class FirstLastTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name(firstName, middleName, lastName, suffix);
 
-		var comparer = new FirstLast();
-		comparer.Equals(name1, name2).Should().Be(expectedResult);
+		var allResults = name1.Matches(name2).ToList();
+		
+		var  results = allResults.Where(x => x.Method.Equals("FirstLast")); 
+		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -27,9 +29,10 @@ public class FirstLastTests
 	{
 		var name1 = new Name(firstName1, lastName1);
 		var name2 = new Name(firstName2, lastName2);
-
-		var comparer = new FirstLast();
-		comparer.EqualsIgnoreOrder(name1, name2).Should().Be(expectedResult);
+		var allResults = name1.MatchesIgnoreOrder(name2).ToList();
+		
+		var  results = allResults.Where(x => x.Method.Equals("FirstLast")); 
+		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -53,8 +56,11 @@ public class FirstLastTests
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
 
-		var comparer = new FirstLast();
-		comparer.Intersects(name1, name2).Should().Be(expectedResult);
+		var allResults = name1.Intersects(name2).ToList();
+		
+		var  results = allResults.Where(x => x.Method.Equals("FirstLast")); 
+		results?.FirstOrDefault()?.IsMatch.Should().Be(expectedResult);
+		
 	}
 }
 
