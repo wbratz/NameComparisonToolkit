@@ -36,7 +36,6 @@ jobs:
         exit 1
 
     - name: Publish
-      if: env.PACKAGE_VERSION_EXISTS == '0'
       run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
