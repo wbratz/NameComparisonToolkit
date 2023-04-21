@@ -25,9 +25,14 @@ jobs:
 
     - name: Check if package version exists
       run: |
-        PACKAGE_VERSION=$(grep -oP '(?<=<Version>).*(?=</Version>)' NameComparisonToolkit/NameComparisonToolkit.csproj)
-        EXISTS=$(nuget search NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
-        echo "PACKAGE_VERSION_EXISTS=$EXISTS" >> $GITHUB_ENV
+       cat NameComparisonToolkit/NameComparisonToolkit.csproj
+       PACKAGE_VERSION=$(grep -oP '(?<=<Version>).*(?=</Version>)' NameComparisonToolkit/NameComparisonToolkit.csproj)
+       if [ -z "$PACKAGE_VERSION" ]; then
+       echo "Error: Failed to extract package version from NameComparisonToolkit.csproj"
+       exit 1
+       fi
+       EXISTS=$(nuget search NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
+       echo "PACKAGE_VERSION_EXISTS=$EXISTS" >> $GITHUB_ENV
 
     - name: Fail if package version exists
       if: env.PACKAGE_VERSION_EXISTS != '0'
