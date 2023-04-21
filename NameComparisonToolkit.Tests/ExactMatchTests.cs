@@ -1,7 +1,7 @@
 ﻿namespace NameComparisonToolkit.Tests;
 public class ExactMatchTests
 {
-
+	[Theory]
 	[InlineData("John", "Adam", "Smith", "jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Sr.", false)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "Jane", "Adam", "Smith", "Jr.", false)]
