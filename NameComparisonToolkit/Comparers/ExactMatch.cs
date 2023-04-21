@@ -53,13 +53,13 @@ public sealed class ExactMatch : ComparerBase
 
 	public override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.FirstName))
-		&& y.Contains(string.Join(" ", x.MiddleName))
-		&& y.Contains(string.Join(" ", x.LastName))
-		&& y.Contains(string.Join(" ", x.Suffix));
+			&& y.Contains(string.Join(" ", x.MiddleName))
+			&& y.Contains(string.Join(" ", x.LastName))
+			&& y.Contains(string.Join(" ", x.Suffix));
 
-	public override bool Intersects(Name x, Name y) 
+	public override bool Intersects(Name x, Name y)
 		=> y.FirstName.Intersect(x.FirstName).Any()
-			&& y.MiddleName.Intersect(x.MiddleName).Any()
+			&& ((!y.MiddleName.Any() && !x.MiddleName.Any()) || y.MiddleName.Intersect(x.MiddleName).Any())
 			&& y.LastName.Intersect(x.LastName).Any()
 			&& CompareRequiredString(x.Suffix, y.Suffix);
 }
