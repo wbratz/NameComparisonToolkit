@@ -26,16 +26,20 @@ public sealed class Name
 	/// A string representing the name suffix.
 	/// </summary>
 	public string Suffix { get; }
-	
-	private string GetFullName(bool includeSuffix = true)
+
+	/// <summary>
+	/// Generates a full name string by concatenating the first name, middle name, last name, and suffix (if specified).
+	/// </summary>
+	/// <param name="includeSuffix">A boolean value indicating whether to include the suffix in the full name. Default is true.</param>
+	/// <returns>A string representing the full name.</returns>
+	public string GetFullName(bool includeSuffix = true)
 		=> string.Join(" ", new[]
 		{
-		string.Join(" ", FirstName),
-		string.Join(" ", MiddleName),
-		string.Join(" ", LastName),
-		includeSuffix ? Suffix : string.Empty
+			string.Join(" ", FirstName),
+			string.Join(" ", MiddleName),
+			string.Join(" ", LastName),
+			includeSuffix ? Suffix : string.Empty
 		}.Where(x => !string.IsNullOrEmpty(x)));
-
 
 	/// <summary>
 	/// Retrieves a tokenized version of the full name as a list of strings.
@@ -63,9 +67,9 @@ public sealed class Name
 	/// <param name="suffix">A string representing the name suffix.</param>
 	public Name(string firstName, string middleName, string lastName, string suffix)
 	{
-		FirstName = firstName.IsNullOrWhiteSpace() ?  Enumerable.Empty<string>() : firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		FirstName = firstName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 		MiddleName = middleName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-		LastName = lastName.IsNullOrWhiteSpace() ?  Enumerable.Empty<string>() : lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		LastName = lastName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
@@ -83,68 +87,68 @@ public sealed class Name
 		LastName = lastName;
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
-	
+
 	/// <summary>
-	/// 
+	/// Compares the given name object with the current name object using all available comparison types and returns a list of comparison results.
+	/// Uses Equals for each name part given the comparison type
 	/// </summary>
 	/// <param name="nameToCompare">The name object to compare.</param>
-	/// <returns>List of all Match results</returns>
-	public IEnumerable<ComparisonResult> Matches(Name nameToCompare) 
-	{
-		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Compare(nameToCompare, t.GetComparer())).ToList();
-	}
-	
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="nameToCompare"></param>
-	/// <returns></returns>
-	public IEnumerable<ComparisonResult> Contains(Name nameToCompare) 
-	{
-		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Contains(nameToCompare.GetFullName(), t.GetComparer())).ToList();
-	}
+	/// <returns>List of all Comparison results</returns>
+	public IEnumerable<ComparisonResult> Matches(Name nameToCompare)
+		=> ExecuteComparison(nameToCompare, (comparer, name) => Compare(name, comparer));
 
 	/// <summary>
-	/// 
+	/// Compares the given name object with the current name object using all available comparison types and returns a list of comparison results.
+	/// Uses Equals for each name part given the comparison type
 	/// </summary>
-	/// <param name="nameToCompare"></param>
-	/// <returns></returns>
+	/// <param name="nameToCompare">The name object to compare.</param>
+	/// <returns>List of all Comparison results</returns>
+	public IEnumerable<ComparisonResult> MatchesIgnoreOrder(Name nameToCompare)
+		=> ExecuteComparison(nameToCompare, (comparer, name) => CompareIgnoreOrder(name, comparer));
+
+	/// <summary>
+	/// Checks if the current name object is contained within the given name string using all available comparison types and returns a list of comparison results.
+	/// </summary>
+	/// <param name="nameToCompare">The name object to compare.</param>
+	/// <returns>List of Contains results.</returns>
+	public IEnumerable<ComparisonResult> Contains(string nameToCompare)
+		=> ExecuteComparison(nameToCompare, (comparer, name) => Contains(name, comparer));
+
+	/// <summary>
+	/// Checks if the given name object intersects with the current name object using all available comparison types and returns a list of comparison results.
+	/// </summary>
+	/// <param name="nameToCompare">The name object to compare.</param>
+	/// <returns>List of Intersects results.</returns>
 	public IEnumerable<ComparisonResult> Intersects(Name nameToCompare)
-	{
-		return (from ComparisonType t in Enum.GetValues(typeof(ComparisonType)) select Intersects(nameToCompare, t.GetComparer())).ToList();
-	}
+		=> ExecuteComparison(nameToCompare, (comparer, name) => Intersects(name, comparer));
 
-	/// <summary>
-	/// Determines if the given name object matches the current name object using the ExactMatchIgnoreCase comparer.
-	/// </summary>
-	/// <param name="name">The name object to compare.</param>
-	/// <returns>True if the names match, otherwise false.</returns>
-	public ComparisonResult Compare(Name name)
-		=> Compare(name, ComparisonType.ExactMatchIgnoreCase.GetComparer());
-	
+	private static IEnumerable<ComparisonResult> ExecuteComparison<T>(T nameToCompare, Func<ComparerBase, T, ComparisonResult> comparisonFunction)
+		=> Enum.GetValues(typeof(ComparisonType))
+			.Cast<ComparisonType>()
+			.Select(t => comparisonFunction(t.GetComparer(), nameToCompare));
+
 	private ComparisonResult Compare(Name name, ComparerBase comparer)
-		=> new()
-		{
-			Method = comparer.GetType().Name,
-			IsMatch = comparer.Equals(this, name),
-			Confidence = 0 //(float)comparer.GetConfidence(this, name)
-		};
+		=> new(comparer.GetType().Name, comparer.Equals(this, name), comparer.GetSimilarity(this, name));
+
+	private ComparisonResult CompareIgnoreOrder(Name name, ComparerBase comparer)
+		=> new(comparer.GetType().Name, comparer.EqualsIgnoreOrder(this, name), comparer.GetSimilarity(this, name));
 
 	private ComparisonResult Contains(string name, ComparerBase comparer)
-		=> new()
-		{
-			Method = comparer.GetType().Name,
-			IsMatch = comparer.Contains(this, name),
-			Confidence = 0 //comparer.GetConfidence(this, name)
-		};
+		=> new(comparer.GetType().Name, comparer.Contains(this, name), comparer.GetSimilarity(this, name));
 
 	private ComparisonResult Intersects(Name name, ComparerBase comparer)
-		=> new()
-		{
-			Method = comparer.GetType().Name,
-			IsMatch = comparer.Intersects(this, name),
-			Confidence = 0 //comparer.GetConfidence(this, name)
-		};
+		=> new(comparer.GetType().Name, comparer.Intersects(this, name), comparer.GetSimilarity(this, name));
+
+	private static bool IsSuffix(string token)
+		=> _suffixList.Contains(token, StringComparer.OrdinalIgnoreCase);
+
+	private static string ReplaceIgnoredStrings(string token)
+		=> token?.ToUpper() == _ignoredString ? string.Empty : token ?? string.Empty;
+
+	private static string NormalizeSuffix(string suffix)
+		=> string.IsNullOrEmpty(suffix)
+			? string.Empty
+			: suffix.Replace(".", "").ToLowerInvariant();
 
 	// kept for future development
 	private static Name Parse(string fullName)
@@ -186,17 +190,6 @@ public sealed class Name
 
 		return new Name(firstName, middleName, string.Join(" ", lastNames), suffix);
 	}
-
-	private static bool IsSuffix(string token)
-		=> _suffixList.Contains(token, StringComparer.OrdinalIgnoreCase);
-
-	private static string ReplaceIgnoredStrings(string token)
-		=> token?.ToUpper() == _ignoredString ? string.Empty : token ?? string.Empty;
-
-	private static string NormalizeSuffix(string suffix)
-		=> string.IsNullOrEmpty(suffix)
-			? string.Empty
-			: suffix.Replace(".", "").ToLowerInvariant();
 
 	private static readonly string[] _suffixList = {
 		"senior",

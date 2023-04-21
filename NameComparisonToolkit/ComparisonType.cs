@@ -1,6 +1,6 @@
 ﻿namespace NameComparisonToolkit;
 
-public enum ComparisonType
+internal enum ComparisonType
 {
 	ExactMatchIgnoreCase = 0,
 	FirstNameLastNameIgnoreCase = 1,

@@ -1,9 +1,9 @@
-﻿using NameComparisonToolkit.Confidence;
-using NameComparisonToolkit.Extensions;
+﻿using NameComparisonToolkit.Extensions;
+using NameComparisonToolkit.Similarity;
 
 namespace NameComparisonToolkit.Comparers;
 
-public sealed class ExactMatch : ComparerBase
+internal sealed class ExactMatch : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
 	{
@@ -14,7 +14,7 @@ public sealed class ExactMatch : ComparerBase
 			   || CompareTokens(x, y);
 	}
 
-	public override bool EqualsIgnoreOrder(Name x, Name y)
+	internal override bool EqualsIgnoreOrder(Name x, Name y)
 		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
 			   && CompareRequiredNamePartIgnoreOrder(x.MiddleName, y.MiddleName)
 			   && CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName)
@@ -36,11 +36,14 @@ public sealed class ExactMatch : ComparerBase
 		};
 	}
 
-	public override double GetConfidence(Name x, Name y)
-		=> ConfidenceBuilder.Build(x.FirstName.Join(" "), y.FirstName.Join(" "))
-			* ConfidenceBuilder.Build(x.MiddleName.Join(" "), y.MiddleName.Join(" "))
-			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "))
-			* ConfidenceBuilder.Build(x.Suffix, y.Suffix);
+	internal override double GetSimilarity(Name x, Name y)
+		=> SimilarityBuilder.Build(x.FirstName.Join(" ").ToLowerInvariant(), y.FirstName.Join(" ").ToLowerInvariant())
+			* SimilarityBuilder.Build(x.MiddleName.Join(" ").ToLowerInvariant(), y.MiddleName.Join(" ").ToLowerInvariant())
+			* SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant())
+			* SimilarityBuilder.Build(x.Suffix.ToLowerInvariant(), y.Suffix.ToLowerInvariant());
+
+	internal override double GetSimilarity(Name x, string y)
+		=> SimilarityBuilder.Build(x.GetFullName().ToLowerInvariant(), y.ToLowerInvariant());
 
 	private static bool CompareTokens(Name x, Name y)
 	{
@@ -51,13 +54,13 @@ public sealed class ExactMatch : ComparerBase
 			&& !xTokens.Except(yTokens, StringComparer.InvariantCultureIgnoreCase).Any();
 	}
 
-	public override bool Contains(Name x, string y)
+	internal override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.FirstName), StringComparison.OrdinalIgnoreCase)
 			&& y.Contains(string.Join(" ", x.MiddleName), StringComparison.OrdinalIgnoreCase)
 			&& y.Contains(string.Join(" ", x.LastName), StringComparison.OrdinalIgnoreCase)
 			&& y.Contains(string.Join(" ", x.Suffix), StringComparison.OrdinalIgnoreCase);
 
-	public override bool Intersects(Name x, Name y)
+	internal override bool Intersects(Name x, Name y)
 		=> y.FirstName.Intersect(x.FirstName).Any()
 			&& ((!y.MiddleName.Any() && !x.MiddleName.Any()) || y.MiddleName.Intersect(x.MiddleName).Any())
 			&& y.LastName.Intersect(x.LastName).Any()

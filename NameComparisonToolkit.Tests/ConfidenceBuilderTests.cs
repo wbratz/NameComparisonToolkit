@@ -1,4 +1,4 @@
-﻿using NameComparisonToolkit.Confidence;
+﻿using NameComparisonToolkit.Similarity;
 
 namespace NameComparisonToolkit.Tests;
 public class ConfidenceBuilderTests
@@ -21,7 +21,7 @@ public class ConfidenceBuilderTests
 	public void Build_ReturnsCorrectSimilarityScore(string name1, string name2, double lowerBound)
 	{
 		// Act
-		var similarityScore = ConfidenceBuilder.Build(name1, name2);
+		var similarityScore = SimilarityBuilder.Build(name1, name2);
 
 		// Assert
 		similarityScore.Should().BeGreaterThan(lowerBound);

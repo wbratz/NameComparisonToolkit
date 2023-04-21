@@ -1,5 +1,5 @@
-﻿using NameComparisonToolkit.Confidence;
-using NameComparisonToolkit.Extensions;
+﻿using NameComparisonToolkit.Extensions;
+using NameComparisonToolkit.Similarity;
 
 namespace NameComparisonToolkit.Comparers;
 
@@ -11,13 +11,13 @@ public sealed class FirstLastSuffix : ComparerBase
 				&& CompareRequiredString(x.Suffix, y.Suffix))
 			   || CompareTokens(x, y);
 
-	public override bool EqualsIgnoreOrder(Name x, Name y)
+	internal override bool EqualsIgnoreOrder(Name x, Name y)
 		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
 			   && CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName)
 			   && CompareOptionalString(x.Suffix, y.Suffix)
 			   || CompareTokens(x, y);
 
-	public override bool Contains(Name x, string y)
+	internal override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.FirstName), StringComparison.OrdinalIgnoreCase)
 			&& y.Contains(string.Join(" ", x.LastName), StringComparison.OrdinalIgnoreCase)
 			&& y.Contains(string.Join(" ", x.Suffix), StringComparison.OrdinalIgnoreCase);
@@ -33,12 +33,16 @@ public sealed class FirstLastSuffix : ComparerBase
 				 ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
 
-	public override double GetConfidence(Name x, Name y)
-		=> ConfidenceBuilder.Build(x.FirstName.Join(" "), y.FirstName.Join(" "))
-			* ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "))
-			* ConfidenceBuilder.Build(x.Suffix, y.Suffix);
+	internal override double GetSimilarity(Name x, Name y)
+		=> SimilarityBuilder.Build(x.FirstName.Join(" ").ToLowerInvariant(), y.FirstName.Join(" ").ToLowerInvariant())
+			* SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant())
+			* SimilarityBuilder.Build(x.Suffix.ToLowerInvariant(), y.Suffix.ToLowerInvariant());
 
-	public override bool Intersects(Name x, Name y)
+	internal override double GetSimilarity(Name x, string y)
+		=> SimilarityBuilder.Build($"{x.FirstName.Join(" ")} {x.LastName.Join(" ")} {x.Suffix}".ToLowerInvariant(), y.ToLowerInvariant());
+
+
+	internal override bool Intersects(Name x, Name y)
 		=> y.FirstName.Intersect(x.FirstName).Any()
 			&& y.LastName.Intersect(x.LastName).Any()
 			&& CompareRequiredString(x.Suffix, y.Suffix);
