@@ -95,7 +95,7 @@ public sealed class Name
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of all Comparison results</returns>
 	public IEnumerable<ComparisonResult> Matches(Name nameToCompare)
-		=> ExecuteComparison(nameToCompare, (comparer, name) => Compare(name, comparer));
+		=> ExecuteComparison(nameToCompare, (comparer, comparisonType, name) => Compare(name, comparer, comparisonType));
 
 	/// <summary>
 	/// Compares the given name object with the current name object using all available comparison types and returns a list of comparison results.
@@ -104,7 +104,7 @@ public sealed class Name
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of all Comparison results</returns>
 	public IEnumerable<ComparisonResult> MatchesIgnoreOrder(Name nameToCompare)
-		=> ExecuteComparison(nameToCompare, (comparer, name) => CompareIgnoreOrder(name, comparer));
+		=> ExecuteComparison(nameToCompare, (comparer, comparisonType, name) => CompareIgnoreOrder(name, comparer, comparisonType));
 
 	/// <summary>
 	/// Checks if the current name object is contained within the given name string using all available comparison types and returns a list of comparison results.
@@ -112,7 +112,7 @@ public sealed class Name
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of Contains results.</returns>
 	public IEnumerable<ComparisonResult> Contains(string nameToCompare)
-		=> ExecuteComparison(nameToCompare, (comparer, name) => Contains(name, comparer));
+		=> ExecuteComparison(nameToCompare, (comparer, comparisonType, name) => Contains(name, comparer, comparisonType));
 
 	/// <summary>
 	/// Checks if the given name object intersects with the current name object using all available comparison types and returns a list of comparison results.
@@ -120,24 +120,24 @@ public sealed class Name
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of Intersects results.</returns>
 	public IEnumerable<ComparisonResult> Intersects(Name nameToCompare)
-		=> ExecuteComparison(nameToCompare, (comparer, name) => Intersects(name, comparer));
+		=> ExecuteComparison(nameToCompare, (comparer, comparisonType, name) => Intersects(name, comparer, comparisonType));
 
-	private static IEnumerable<ComparisonResult> ExecuteComparison<T>(T nameToCompare, Func<ComparerBase, T, ComparisonResult> comparisonFunction)
+	private static IEnumerable<ComparisonResult> ExecuteComparison<T>(T nameToCompare, Func<ComparerBase, ComparisonType, T, ComparisonResult> comparisonFunction)
 		=> Enum.GetValues(typeof(ComparisonType))
 			.Cast<ComparisonType>()
-			.Select(t => comparisonFunction(t.GetComparer(), nameToCompare));
+			.Select(t => comparisonFunction(t.GetComparer(), t, nameToCompare));
 
-	private ComparisonResult Compare(Name name, ComparerBase comparer)
-		=> new(comparer.GetType().Name, comparer.Equals(this, name), comparer.GetSimilarity(this, name));
+	private ComparisonResult Compare(Name name, ComparerBase comparer, ComparisonType comparisonType)
+		=> new(comparisonType, comparer.Equals(this, name), comparer.GetSimilarity(this, name));
 
-	private ComparisonResult CompareIgnoreOrder(Name name, ComparerBase comparer)
-		=> new(comparer.GetType().Name, comparer.EqualsIgnoreOrder(this, name), comparer.GetSimilarity(this, name));
+	private ComparisonResult CompareIgnoreOrder(Name name, ComparerBase comparer, ComparisonType comparisonType)
+		=> new(comparisonType, comparer.EqualsIgnoreOrder(this, name), comparer.GetSimilarity(this, name));
 
-	private ComparisonResult Contains(string name, ComparerBase comparer)
-		=> new(comparer.GetType().Name, comparer.Contains(this, name), comparer.GetSimilarity(this, name));
+	private ComparisonResult Contains(string name, ComparerBase comparer, ComparisonType comparisonType)
+		=> new(comparisonType, comparer.Contains(this, name), comparer.GetSimilarity(this, name));
 
-	private ComparisonResult Intersects(Name name, ComparerBase comparer)
-		=> new(comparer.GetType().Name, comparer.Intersects(this, name), comparer.GetSimilarity(this, name));
+	private ComparisonResult Intersects(Name name, ComparerBase comparer, ComparisonType comparisonType)
+		=> new(comparisonType, comparer.Intersects(this, name), comparer.GetSimilarity(this, name));
 
 	private static bool IsSuffix(string token)
 		=> _suffixList.Contains(token, StringComparer.OrdinalIgnoreCase);

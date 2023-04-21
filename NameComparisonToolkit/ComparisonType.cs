@@ -1,6 +1,6 @@
 ﻿namespace NameComparisonToolkit;
 
-internal enum ComparisonType
+public enum ComparisonType
 {
 	ExactMatch = 0,
 	FirstLast = 1,

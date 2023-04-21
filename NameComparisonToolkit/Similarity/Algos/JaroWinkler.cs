@@ -1,9 +1,9 @@
 ﻿using NameComparisonToolkit.Extensions;
 
 namespace NameComparisonToolkit.Confidence.Algos;
-public static class JaroWinkler
+internal static class JaroWinkler
 {
-	public static double CalculateStringSimilarity(string str1, string str2)
+	internal static double CalculateStringSimilarity(string str1, string str2)
 	{
 		if (str1.IsNullOrWhiteSpace() && str2.IsNullOrWhiteSpace())
 		{
