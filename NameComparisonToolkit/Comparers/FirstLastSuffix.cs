@@ -18,9 +18,9 @@ public sealed class FirstLastSuffix : ComparerBase
 			   || CompareTokens(x, y);
 
 	public override bool Contains(Name x, string y)
-		=> y.Contains(string.Join(" ", x.FirstName))
-			&& y.Contains(string.Join(" ", x.LastName))
-			&& y.Contains(string.Join(" ", x.Suffix));
+		=> y.Contains(string.Join(" ", x.FirstName), StringComparison.OrdinalIgnoreCase)
+			&& y.Contains(string.Join(" ", x.LastName), StringComparison.OrdinalIgnoreCase)
+			&& y.Contains(string.Join(" ", x.Suffix), StringComparison.OrdinalIgnoreCase);
 
 	public override int GetHashCode(Name obj)
 		=> obj switch

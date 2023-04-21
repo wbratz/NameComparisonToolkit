@@ -12,7 +12,7 @@ public sealed class Last : ComparerBase
 		=> CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName);
 
 	public override bool Contains(Name x, string y)
-		=> y.Contains(string.Join(" ", x.LastName));
+		=> y.Contains(string.Join(" ", x.LastName), StringComparison.OrdinalIgnoreCase);
 
 	public override double GetConfidence(Name x, Name y)
 		=> ConfidenceBuilder.Build(x.LastName.Join(" "), y.LastName.Join(" "));
