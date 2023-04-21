@@ -21,7 +21,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
-		name1.Matches(name2).Should().BeTrue();
+		name1.Compare(name2).IsMatch.Should().BeTrue();
 	}
 
 	[Fact]
@@ -30,7 +30,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr");
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
-		name1.Matches(name2).Should().BeTrue();
+		name1.Compare(name2).IsMatch.Should().BeTrue();
 	}
 
 	[Fact]
@@ -39,7 +39,7 @@ public class NameTests
 		var name1 = new Name("John", "Adam", "Smith", "Jr.");
 		var name2 = new Name("John", "Adam", "Doe", "Jr.");
 
-		name1.Matches(name2).Should().BeFalse();
+		name1.Compare(name2).IsMatch.Should().BeFalse();
 	}
 
 	[Fact]
@@ -66,5 +66,41 @@ public class NameTests
 		};
 
 		name1.MatchesAny(names, ComparisonType.ExactMatchIgnoreCase).Should().BeFalse();
+	}
+
+	[Fact]
+	public void GetMatchResults_ShouldReturnResultCount_EqualToComparisonTypeCount()
+	{
+		var typeCount = Enum.GetNames(typeof(ComparisonType)).Length;
+		var name1 = new Name("John", "Adam", "Smith", "Jr.");
+		var name2 = new Name("John", "Adam", "Smith", "Jr.");
+
+		var result = name1.GetMatchResults(name2);
+
+		result.Count().Should().Be(typeCount);
+	}
+	
+	[Fact]
+	public void GetContainResults_ShouldReturnResultCount_EqualToComparisonTypeCount()
+	{
+		var typeCount = Enum.GetNames(typeof(ComparisonType)).Length;
+		var name1 = new Name("John", "Adam", "Smith", "Jr.");
+		var name2 = new Name("John", "Adam", "Smith", "Jr.");
+
+		var result = name1.GetContainResults(name2);
+
+		result.Count().Should().Be(typeCount);
+	}
+	
+	[Fact]
+	public void GetIntersectResults_ShouldReturnResultCount_EqualToComparisonTypeCount()
+	{
+		var typeCount = Enum.GetNames(typeof(ComparisonType)).Length;
+		var name1 = new Name("John", "Adam", "Smith", "Jr.");
+		var name2 = new Name("John Adam", "Joel", "Smith", "Jr.");
+
+		var result = name1.GetIntersectResults(name2);
+
+		result.Count().Should().Be(typeCount);
 	}
 }
