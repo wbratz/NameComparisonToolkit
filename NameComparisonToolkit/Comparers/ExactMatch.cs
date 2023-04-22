@@ -1,29 +1,24 @@
-﻿using NameComparisonToolkit.Extensions;
-using NameComparisonToolkit.Similarity;
+﻿using NameComparisonToolkit.Similarity;
 
 namespace NameComparisonToolkit.Comparers;
 
 internal sealed class ExactMatch : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
-	{
-		return CompareRequiredNamePart(x.FirstName, y.FirstName)
-			   && CompareRequiredNamePart(x.MiddleName, y.MiddleName)
+		=> CompareRequiredNamePart(x.FirstName, y.FirstName)
+			   && CompareOptionalNamePart(x.MiddleName, y.MiddleName)
 			   && CompareRequiredNamePart(x.LastName, y.LastName)
 			   && CompareOptionalString(x.Suffix, y.Suffix);
-			   //|| CompareTokens(x, y);
-	}
 
 	internal override bool EqualsIgnoreOrder(Name x, Name y)
 		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
-			   && CompareRequiredNamePartIgnoreOrder(x.MiddleName, y.MiddleName)
+			   && CompareOptionalNamePartIgnoreOrder(x.MiddleName, y.MiddleName)
 			   && CompareRequiredNamePartIgnoreOrder(x.LastName, y.LastName)
 			   && CompareOptionalString(x.Suffix, y.Suffix)
 			   || CompareTokens(x, y);
 
 	public override int GetHashCode(Name obj)
-	{
-		return obj switch
+		=> obj switch
 		{
 			null => 0,
 			_ => obj.FirstName.Aggregate(0, (hash, firstName)
@@ -34,7 +29,6 @@ internal sealed class ExactMatch : ComparerBase
 						=> hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
 				 ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
-	}
 
 	internal override double GetSimilarity(Name x, Name y)
 		=> SimilarityBuilder.Build(string.Join(" ", x.FirstName).ToLowerInvariant(), string.Join(" ", y.FirstName).ToLowerInvariant())
