@@ -35,10 +35,10 @@ public sealed class Name
 	public string GetFullName(bool includeSuffix = true)
 		=> string.Join(" ", new[]
 		{
-			string.Join(" ", FirstName),
-			string.Join(" ", MiddleName),
-			string.Join(" ", LastName),
-			includeSuffix ? Suffix : string.Empty
+			string.Join(" ", ToLower(FirstName)),
+			string.Join(" ", ToLower(MiddleName)),
+			string.Join(" ", ToLower(LastName)),
+			includeSuffix ? NormalizeSuffix(Suffix) : string.Empty
 		}.Where(x => !string.IsNullOrEmpty(x)));
 
 	/// <summary>
@@ -67,9 +67,9 @@ public sealed class Name
 	/// <param name="suffix">A string representing the name suffix.</param>
 	public Name(string firstName, string middleName, string lastName, string suffix)
 	{
-		FirstName = firstName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-		MiddleName = middleName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-		LastName = lastName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		FirstName = firstName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : ToLower(firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+		MiddleName = middleName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : ToLower(middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+		LastName = lastName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : ToLower(lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
@@ -82,9 +82,9 @@ public sealed class Name
 	/// <param name="suffix">A string representing the name suffix.</param>
 	public Name(IEnumerable<string> firstName, IEnumerable<string> middleName, IEnumerable<string> lastName, string suffix)
 	{
-		FirstName = firstName;
-		MiddleName = middleName;
-		LastName = lastName;
+		FirstName = ToLower(firstName);
+		MiddleName = ToLower(middleName);
+		LastName = ToLower(lastName);
 		Suffix = ReplaceIgnoredStrings(NormalizeSuffix(suffix?.Trim() ?? string.Empty));
 	}
 
@@ -149,6 +149,12 @@ public sealed class Name
 		=> string.IsNullOrEmpty(suffix)
 			? string.Empty
 			: suffix.Replace(".", "").ToLowerInvariant();
+	
+	private IEnumerable<string> ToLower(IEnumerable<string> namePart)
+	{
+		namePart = namePart.ToList().ConvertAll(s => s.ToLowerInvariant());
+		return namePart;
+	}
 
 	// kept for future development
 	private static Name Parse(string fullName)

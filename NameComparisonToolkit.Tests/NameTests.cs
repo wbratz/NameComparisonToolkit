@@ -9,10 +9,10 @@ public class NameTests
 		var tokensWithSuffix = name.GetTokenizedName(includeSuffix: true);
 		var tokensWithoutSuffix = name.GetTokenizedName(includeSuffix: false);
 
-		tokensWithSuffix.Should().Equal(new List<string> { "John", "Adam", "Smith", "jr" });
-		tokensWithoutSuffix.Should().Equal(new List<string> { "John", "Adam", "Smith" });
-		tokensWithSuffix.Should().Equal(new List<string> { "John", "Adam", "Smith", "jr" });
-		tokensWithoutSuffix.Should().Equal(new List<string> { "John", "Adam", "Smith" });
+		tokensWithSuffix.Should().Equal(new List<string> { "john", "adam", "smith", "jr" });
+		tokensWithoutSuffix.Should().Equal(new List<string> { "john", "adam", "smith" });
+		tokensWithSuffix.Should().Equal(new List<string> { "john", "adam", "smith", "jr" });
+		tokensWithoutSuffix.Should().Equal(new List<string> { "john", "adam", "smith" });
 	}
 
 	[Fact]
@@ -28,7 +28,7 @@ public class NameTests
 	[Fact]
 	public void Matches_ShouldReturnTrueForMixedSuffixPunctuation()
 	{
-		var name1 = new Name("John", "Adam", "Smith", "Jr");
+		var name1 = new Name("john", "Adam", "Smith", "Jr");
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
 		var results = name1.Matches(name2);

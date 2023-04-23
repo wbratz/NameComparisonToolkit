@@ -55,7 +55,7 @@ public class ExactMatchTests
 	[InlineData("John", "Adam James", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith James", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("William", "", "Clayton", "", "William", "", "Clayton", "", true)]
-	[InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", false)] //should this pass as intersection or just as 
+	[InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", true)]
 
 	public void Intersects_ShouldCompareExactMatchCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
