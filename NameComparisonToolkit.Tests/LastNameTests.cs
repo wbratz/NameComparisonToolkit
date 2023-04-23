@@ -5,6 +5,7 @@ public class LastNameTests
 	[InlineData("John", "Adam", "Smith Doe", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", false)]
 	[InlineData("John", "Adam", "Doe Smith", "Jr.", false)]
+	[InlineData("Joey", "Adam-levine", "smith Doe", "Junior", true)]
 	public void Matches_ShouldHandleMultipleLastNamesCorrectly(string firstName, string middleName, string lastName, string suffix, bool expectedResult)
 	{
 		var name1 = new Name("John", "Adam", "Smith Doe", "Jr.");
@@ -12,7 +13,7 @@ public class LastNameTests
 
 		var results = name1.Matches(name2);
 
-		results.Where(x => x.ComparisonType.Equals(ComparisonType.Last)).First().IsMatch.Should().Be(expectedResult);
+		results.First(x => x.ComparisonType.Equals(ComparisonType.Last)).IsMatch.Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -26,7 +27,7 @@ public class LastNameTests
 
 		var results = name1.MatchesIgnoreOrder(name2);
 
-		results.Where(x => x.ComparisonType.Equals(ComparisonType.Last)).First().IsMatch.Should().Be(expectedResult);
+		results.First(x => x.ComparisonType.Equals(ComparisonType.Last)).IsMatch.Should().Be(expectedResult);
 	}
 
 	[Theory]
@@ -44,9 +45,8 @@ public class LastNameTests
 	{
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
 		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
-
-
+		
 		var results = name1.Intersects(name2);
-		results.Where(x => x.ComparisonType.Equals(ComparisonType.Last)).First().IsMatch.Should().Be(expectedResult);
+		results.First(x => x.ComparisonType.Equals(ComparisonType.Last)).IsMatch.Should().Be(expectedResult);
 	}
 }

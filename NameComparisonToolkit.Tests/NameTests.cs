@@ -22,7 +22,7 @@ public class NameTests
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
 		var results = name1.Matches(name2);
-		results.Where(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)).First().IsMatch.Should().BeTrue();
+		results.First(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)).IsMatch.Should().BeTrue();
 	}
 
 	[Fact]
@@ -32,7 +32,7 @@ public class NameTests
 		var name2 = new Name("John", "Adam", "Smith", "Jr.");
 
 		var results = name1.Matches(name2);
-		results.Where(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)).First().IsMatch.Should().BeTrue();
+		results.First(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)).IsMatch.Should().BeTrue();
 	}
 
 	[Fact]
@@ -42,7 +42,7 @@ public class NameTests
 		var name2 = new Name("John", "Adam", "Doe", "Jr.");
 
 		var results = name1.Matches(name2);
-		results.Where(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)).First().IsMatch.Should().BeFalse();
+		results.First(x => x.ComparisonType.Equals(ComparisonType.ExactMatch)).IsMatch.Should().BeFalse();
 	}
 
 

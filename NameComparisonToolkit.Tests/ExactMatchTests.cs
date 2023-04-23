@@ -4,13 +4,16 @@ public class ExactMatchTests
 	[Theory]
 	[InlineData("John", "Adam", "Smith", "jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Sr.", false)]
-	[InlineData("John", "Adam", "Smith", "Jr.", "Jane", "Adam", "Smith", "Jr.", false)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "Jane", "Adam", "Smith", "Jr", false)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Junior", false)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Eve", "Smith", "Jr.", false)]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Doe", "Jr.", false)]
 	[InlineData("John", "", "Smith Jones", "", "John", "", "Smith Jones", "", true)]
 	[InlineData("John", "", "Smith Jones", "", "John", "", "Jones Smith", "", false)]
 	[InlineData("John", "", "Smith", "", "John", "", "Smith Jones", "", false)]
 	[InlineData("John James", "", "Smith", "", "James John", "", "Smith", "", false)]
+	[InlineData("John-alton", "w", "Smith von dressel", "", "John-Alton", "W", "Smith von dressel", "", true)]
+	[InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", false)]
 	public void Equals_ShouldCompareExactMatchCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
@@ -27,6 +30,8 @@ public class ExactMatchTests
 	[InlineData("John James", "Adam Michael", "Smith Doe", "Sr.", "James John", "Michael Adam", "Smith Doe", "Sr.", true)]
 	[InlineData("John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Smith", "Jr.", false)]
 	[InlineData("John James", "Adam Michael", "Smith Doe", "Sr.", "James John", "Michael Adam", "Smith Doe", "", false)]
+	[InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", true)]
+
 	public void EqualsIgnoreOrder_ShouldCompareCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
@@ -50,6 +55,8 @@ public class ExactMatchTests
 	[InlineData("John", "Adam James", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("John", "Adam", "Smith James", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
 	[InlineData("William", "", "Clayton", "", "William", "", "Clayton", "", true)]
+	[InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", false)] //should this pass as intersection or just as 
+
 	public void Intersects_ShouldCompareExactMatchCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
