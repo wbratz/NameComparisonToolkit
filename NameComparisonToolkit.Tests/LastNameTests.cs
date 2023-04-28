@@ -29,6 +29,30 @@ public class LastNameTests
 
 		results.First(x => x.ComparisonType.Equals(ComparisonType.Last)).IsMatch.Should().Be(expectedResult);
 	}
+	[Theory]
+	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "John", "James", "Smith", "Jr.", true)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Sr.", true)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "James", "Adam", "Smith", "Jr.", true)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "", true)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith Johnson", "Jr.", true)]
+	[InlineData("John James", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
+	[InlineData("John", "Adam James", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
+	[InlineData("John", "Adam", "Smith James", "Jr.", "John", "Adam", "Smith", "Jr.", false)]
+	[InlineData("John", "Adam", "Smith", "Jr.","John", "Adam", "Smith James", "Jr.", true)]
+	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr", true)]
+	[InlineData("John", "Adam", "smith", "Jr.", "John", "Adam", "Smith von duff", "Jr", true)]
+	[InlineData("John", "Adam", "smith VON DUFF", "Jr.", "James", "Adam Levine", "Smith", "Jr", false)]
+	[InlineData("James", "Adam Levine", "Smith", "Jr","John", "Adam", "smith VON DUFF", "Jr.", true)]
+	public void Contains_ShouldCompareLastNamesCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
+	{
+		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
+		var name2 = new Name(firstName2, middleName2, lastName2, suffix2);
+		
+		var results = name1.Contains(name2.GetFullName());
+		results.First(x => x.ComparisonType.Equals(ComparisonType.Last)).IsMatch.Should().Be(expectedResult);
+	}
+	
 
 	[Theory]
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
@@ -43,6 +67,7 @@ public class LastNameTests
 	[InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr", true)]
 	[InlineData("John", "Adam", "smith", "Jr.", "John", "Adam", "Smith von duff", "Jr", true)]
 	[InlineData("John", "Adam", "smith VON DUFF", "Jr.", "James", "Adam Levine", "Smith", "Jr", true)]
+	[InlineData("James", "Adam Levine", "Smith", "Jr","John", "Adam", "smith VON DUFF", "Jr.", true)]
 	public void Intersects_ShouldCompareLastNamesCorrectly(string firstName1, string middleName1, string lastName1, string suffix1, string firstName2, string middleName2, string lastName2, string suffix2, bool expectedResult)
 	{
 		var name1 = new Name(firstName1, middleName1, lastName1, suffix1);
