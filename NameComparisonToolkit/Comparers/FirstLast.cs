@@ -7,8 +7,8 @@ internal sealed class FirstLast : ComparerBase
 {
 	public override bool Equals(Name x, Name y)
 		=> (CompareRequiredNamePart(x.FirstName, y.FirstName)
-			&& CompareRequiredNamePart(x.LastName, y.LastName))
-			|| CompareTokens(x, y);
+			&& CompareRequiredNamePart(x.LastName, y.LastName));
+			//|| CompareTokens(x, y);
 
 	internal override bool EqualsIgnoreOrder(Name x, Name y)
 		=> CompareRequiredNamePartIgnoreOrder(x.FirstName, y.FirstName)
