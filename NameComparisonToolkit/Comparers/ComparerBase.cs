@@ -1,11 +1,21 @@
 ﻿namespace NameComparisonToolkit.Comparers;
 
-public abstract class ComparerBase : IEqualityComparer<Name>
+internal abstract class ComparerBase : IEqualityComparer<Name>
 {
-	protected static bool CompareRequiredString(string x, string y)
+	internal static bool CompareRequiredString(string x, string y)
 		=> string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
 
-	protected static bool CompareRequiredNamePartIgnoreOrder(IEnumerable<string> x, IEnumerable<string> y)
+	internal static bool CompareRequiredNamePart(IEnumerable<string> x, IEnumerable<string> y)
+	{
+		if (!x.Any() || !y.Any())
+		{
+			return false;
+		}
+
+		return x.SequenceEqual(y, StringComparer.InvariantCultureIgnoreCase);
+	}
+
+	internal static bool CompareRequiredNamePartIgnoreOrder(IEnumerable<string> x, IEnumerable<string> y)
 	{
 		if (!x.Any() || !y.Any())
 		{
@@ -17,29 +27,27 @@ public abstract class ComparerBase : IEqualityComparer<Name>
 		return sortedXName.SequenceEqual(sortedYName, StringComparer.InvariantCultureIgnoreCase);
 	}
 
-	protected static bool CompareRequiredNamePart(IEnumerable<string> x, IEnumerable<string> y)
+	internal static bool CompareOptionalNamePartIgnoreOrder(IEnumerable<string> x, IEnumerable<string> y)
 	{
-		if (!x.Any() || !y.Any())
-		{
-			return false;
-		}
-
-		return x.SequenceEqual(y, StringComparer.InvariantCultureIgnoreCase);
+		var sortedXName = x.OrderBy(name => name).ToList();
+		var sortedYName = y.OrderBy(name => name).ToList();
+		return (!x.Any() && !y.Any())
+			|| (x.Any() && y.Any() && sortedXName.SequenceEqual(sortedYName, StringComparer.InvariantCultureIgnoreCase));
 	}
 
-	protected static bool CompareOptionalString(string x, string y)
+	internal static bool CompareOptionalNamePart(IEnumerable<string> x, IEnumerable<string> y)
+		=> (!x.Any() && !y.Any()) || (x.Any() && y.Any() && x.SequenceEqual(y, StringComparer.OrdinalIgnoreCase));
+
+	internal static bool CompareOptionalString(string x, string y)
 		=> ReferenceEquals(x, y)
 			|| string.IsNullOrEmpty(x) && string.IsNullOrEmpty(y)
 			|| string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
 
-	protected static (IEnumerable<string> compareTo, IEnumerable<string> compareAgainst) GetComparers(IEnumerable<string> x, IEnumerable<string> y)
-		=> x.Count() > y.Count() ? (x, y) : (y, x);
-
 	public abstract bool Equals(Name x, Name y);
-	public abstract bool EqualsIgnoreOrder(Name x, Name y);
-	public abstract bool Contains(Name x, string y);
-	public abstract bool Intersects(Name x, Name y);
-	public abstract double GetConfidence(Name x, Name y);
-	//public abstract double GetConfidence(Name x, string y);
+	internal abstract bool EqualsIgnoreOrder(Name x, Name y);
+	internal abstract bool Contains(Name x, string y);
+	internal abstract bool Intersects(Name x, Name y);
+	internal abstract double GetSimilarity(Name x, Name y);
+	internal abstract double GetSimilarity(Name x, string y);
 	public abstract int GetHashCode(Name obj);
 }
