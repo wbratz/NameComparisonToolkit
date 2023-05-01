@@ -97,41 +97,7 @@ public class ExactMatchTestData : IEnumerable<object[]>
 			"James John", "Michael Adam", "Doe Smith", "Jr.", 
 			ExactMatchResults(false, true, false, true)
 		};
-		// yield return new object[]
-		// {
-		// 	"",ExactMatchResults(false, false, false, false)
-		// };
-		// yield return new object[]
-		// {
-		// 	"",ExactMatchResults(false, false, false, false)
-		// };
-		// yield return new object[]
-		// {
-		// 	"",ExactMatchResults(false, false, false, false)
-		// };
-
-		//equalsIgnoreORder
-		// "John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Doe Smith", "Jr.", true
-		// [InlineData("John James", "Adam Michael", "Smith Doe", "Sr.", "James John", "Michael Adam", "Smith Doe", "Sr.", true)]
-		// [InlineData("John James", "Adam Michael", "Smith Doe", "Jr.", "James John", "Michael Adam", "Smith", "Jr.", false)]
-		// [InlineData("John James", "Adam Michael", "Smith Doe", "Sr.", "James John", "Michael Adam", "Smith Doe", "", false)]
-		// [InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", true)]
 		
-		//contains
-		// [InlineData("John James", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", false)]
-		// [InlineData("John", "Adam James", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", false)]
-		// [InlineData("John", "Adam", "Smith James", "Jr.", "John", "Adam", "Smith", "Jr.", false)]
-		// [InlineData("William", "", "Clayton", "", "William", "", "Clayton", "", true)]
-		// [InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", true)]
-		
-		//intersects
-		
-		// [InlineData("John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith Johnson", "Jr.", true)]
-		// [InlineData("John James", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
-		// [InlineData("John", "Adam James", "Smith", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
-		// [InlineData("John", "Adam", "Smith James", "Jr.", "John", "Adam", "Smith", "Jr.", true)]
-		// [InlineData("William", "", "Clayton", "", "William", "", "Clayton", "", true)]
-		// [InlineData("John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", true)]
 	}
 
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
