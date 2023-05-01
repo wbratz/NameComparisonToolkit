@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 				<PackageId>NameComparisonToolkit</PackageId>
-				<Version>0.0.4</Version>
+				<Version>1.0.0</Version>
 				<Authors>Lillie Bradfield, William Bratz</Authors>
 				<Description>Name Comparison with lots of features</Description>
 				<PackageReleaseNotes>This package takes name parts as strings, compares, then returns MatchResults object with data from multiple matching methods and a matching score</PackageReleaseNotes>
