@@ -9,7 +9,7 @@ public class LastNameTestData : IEnumerable<object[]>
 	/// Equals -> LastName parts match exactly on both names
 	/// EqualsIgnoreOrder -> LastName parts match exactly but order of strings in name parts is ignored
 	/// Contains -> Name2 as a full string contains the LastName part of Name1
-	/// Intersects -> Is each string of name part (LastName) of Name1 in ANY name part of Name2
+	/// Intersects -> at least one string of LastName of Name1 in ANY string of LastName part of Name2
 	/// </summary>
 	public IEnumerator<object[]> GetEnumerator()
 	{
@@ -42,6 +42,12 @@ public class LastNameTestData : IEnumerable<object[]>
 			"jacob", "Adam", "SMITH", "Jr.",
 			"JACOB Adam", "", "Smith-Johnson", "sr.",
 			LastNameMatchResults(false, false, true, false)
+		}; 
+		yield return new object[]
+		{
+			"jacob", "Adam", "SMITH Jones", "Jr.",
+			"Joey", "", "Smith Johnson", "sr.",
+			LastNameMatchResults(false, false, false, true)
 		}; 
 		yield return new object[]
 		{
