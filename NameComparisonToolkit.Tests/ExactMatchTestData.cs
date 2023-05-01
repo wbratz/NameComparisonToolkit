@@ -16,59 +16,86 @@ public class ExactMatchTestData : IEnumerable<object[]>
 	{
 		yield return new object[]
 		{
-			"John", "Adam", "Smith", "Jr.", "john", "adam", "smith", "jr.", ExactMatchResults(true, true, true, true)
+			"John", "Adam", "Smith", "Jr.",
+			"john", "adam", "smith", "jr.",
+			ExactMatchResults(true, true, true, true)
 		};
 		yield return new object[]
 		{
-			"John", "Adam", "Smith", "Jr.", "john", "adam", "smith", "Jr", ExactMatchResults(true, true, true, true)
+			"John", "Adam", "Smith", "Jr.",
+			"john", "adam", "smith", "Jr", 
+			ExactMatchResults(true, true, true, true)
 		};
 		yield return new object[]
 		{
-			"John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "SR.", ExactMatchResults(false, false, false, false)
+			"John", "Adam", "Smith", "Jr.",
+			"John", "Adam", "Smith", "SR.", 
+			ExactMatchResults(false, false, false, false)
 		};
 		yield return new object[]
 		{
-			"John", "Adam", "Smith", "Jr.", "JANE", "adam", "smith", "Jr", ExactMatchResults(false, false, false, false)
+			"John", "Adam", "Smith", "Jr.",
+			"JANE", "adam", "smith", "Jr", 
+			ExactMatchResults(false, false, false, false)
 		};
 		yield return new object[]
 		{
-			"John", "Adam", "Smith", "Jr.", "John", "Adam", "Smith", "Junior", ExactMatchResults(false, false, false, false)
+			"John", "Adam", "Smith", "Jr.",
+			"John", "Adam", "Smith", "Junior", 
+			ExactMatchResults(false, false, false, false)
 		};
 		yield return new object[]
 		{
-			"John", "Adam", "Smith", "Jr.", "John", "Adam", "Doe", "Jr.", ExactMatchResults(false, false, false, false)
+			"John", "Adam", "Smith", "Jr.",
+			"John", "Adam", "Doe", "Jr.", 
+			ExactMatchResults(false, false, false, false)
 		};
 		yield return new object[]
 		{
-			"John", "", "Smith Jones", "", "John", "", "SMITHJONES", "", ExactMatchResults(false, false, false, false)
+			"John", "", "Smith Jones", "",
+			"John", "", "SMITHJONES", "", 
+			ExactMatchResults(false, false, false, false)
 		};
 		yield return new object[]
 		{
-			"John", "", "Smith Jones", "", "John", "", "SMITH JONES", "", ExactMatchResults(true, true, true, true)
+			"John", "", "Smith Jones", "",
+			"John", "", "SMITH JONES", "", 
+			ExactMatchResults(true, true, true, true)
 		};
 		yield return new object[]
 		{
-			"John", "", "Smith", "", "John", "", "SMITH JONES", "", ExactMatchResults(false, false, true, true)
+			"John", "", "Smith", "",
+			"John", "", "SMITH JONES", "", ExactMatchResults(false, false, true, true)
 		};
 		yield return new object[]
 		{
-			"John", "Smith", "Jones", "", "John", "", "smith jones", "", ExactMatchResults(false, true, true, false)
+			"John", "Smith", "Jones", "", 
+			"John", "", "smith jones", "", 
+			ExactMatchResults(false, true, true, false)
 		};
 		yield return new object[]
 		{
-			"John James", "", "Smith", "", "JAMES John", "", "smith", "", ExactMatchResults(false, true, false, true)
+			"John James", "", "Smith", "",
+			"JAMES John", "", "smith", "", 
+			ExactMatchResults(false, true, false, true)
 		};
 		yield return new object[]
 		{
-			"John-alton", "w", "Smith von dressel", "", "John-Alton", "W", "Smith von dressel", "", ExactMatchResults(true, true, true, true)
+			"John-alton", "w", "Smith von dressel", "",
+			"John-Alton", "W", "Smith von dressel", "", 
+			ExactMatchResults(true, true, true, true)
 		};
 		yield return new object[]
 		{
-			"John", "Alton w", "Smith", "", "John Alton", "W", "Smith", "", ExactMatchResults(false, true, true, true)
+			"John", "Alton w", "Smith", "",
+			"John Alton", "W", "Smith", "", 
+			ExactMatchResults(false, true, true, true)
 		};
 		yield return new object[]
 		{
-			"John James", "Adam MICHAEL", "Smith Doe", "Jr.", "James John", "Michael Adam", "Doe Smith", "Jr.", ExactMatchResults(false, true, false, true)
+			"John James", "Adam MICHAEL", "Smith Doe", "Jr.",
+			"James John", "Michael Adam", "Doe Smith", "Jr.", 
+			ExactMatchResults(false, true, false, true)
 		};
 		// yield return new object[]
 		// {
