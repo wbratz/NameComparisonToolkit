@@ -10,6 +10,7 @@ A powerful and flexible .NET library for comparing names in a variety of ways. I
   - [Containing Names](#containing-names)
   - [Intersecting Names](#intersecting-names)
   - [Comparison Results](#comparison-results)
+  - [Similarity Score](#similarity-score)
 - [Additional Features](#additional-features)
 - [Installation](#installation)
 - [License](#license)
@@ -145,6 +146,42 @@ foreach (var result in matches)
     Console.WriteLine($"Is Match: {result.IsMatch}");
     Console.WriteLine($"Similarity: {result.Similarity}");
 }
+```
+
+### Similarity Score
+
+The similarity score is calculated for each comparison between two names, providing a quantitative measure of how similar the names are. The score ranges from 0.0 to 1.0, where 0.0 represents no similarity and 1.0 indicates an exact match. The similarity score takes into account both the matching characters and the length of the names being compared.
+
+Here's a high-level explanation of how the similarity score is calculated:
+
+1. Compare the two names character by character.
+2. If the characters match, add 1 to the matching character count.
+3. Calculate the maximum possible matching character count based on the length of the names.
+4. Divide the matching character count by the maximum possible matching character count to get the similarity score.
+
+The similarity score can be utilized to filter or rank results based on how closely the names match. For example, you can use the similarity score to show only the names with a similarity score above a certain threshold or to sort the results by similarity score in descending order.
+
+Example:
+
+```csharp
+var name1 = new Name("John Jacob", "Doe Smith");
+var name2 = new Name("Jon Jacob", "Doe Smyth");
+
+var matches = name1.Matches(name2);
+
+foreach (var result in matches)
+{
+    Console.WriteLine($"Comparison Type: {result.ComparisonType}");
+    Console.WriteLine($"Is Match: {result.IsMatch}");
+    Console.WriteLine($"Similarity: {result.Similarity}");
+}
+
+// Filtering results based on similarity score
+var similarityThreshold = 0.8;
+var filteredResults = matches.Where(result => result.Similarity >= similarityThreshold);
+
+// Sorting results by similarity score in descending order
+var sortedResults = matches.OrderByDescending(result => result.Similarity);
 ```
 
 ## Additional Features
