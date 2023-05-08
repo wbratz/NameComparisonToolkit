@@ -59,9 +59,9 @@ Example output:
 
 ```json
 "ComparisonType": "Exact"
-"IsMatch": False
+"IsMatch": false
 "Similarity": 0.5
-...
+// ...
 ```
 
 Compare the two names ignoring the order of the name parts:
@@ -83,9 +83,9 @@ Example output:
 
 ```json
 "ComparisonType": "Exact"
-"IsMatch": True
+"IsMatch": true
 "Similarity": 1.0
-...
+// ...
 ```
 
 ### Containing Names
@@ -105,9 +105,9 @@ Example output:
 
 ```json
 "ComparisonType": "Exact"
-"IsMatch": True
+"IsMatch": true
 "Similarity": 1.0
-...
+// ...
 ```
 
 ### Intersecting Names
@@ -128,9 +128,9 @@ Example output:
 
 ```json
 "ComparisonType": "Exact"
-"IsMatch": True
+"IsMatch": true
 "Similarity": 0.5
-...
+// ...
 ```
 
 ### Comparison Results
