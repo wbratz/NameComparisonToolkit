@@ -25,7 +25,12 @@ A powerful and flexible .NET library for comparing names in a variety of ways. I
 
 ## Usage
 
-First, create a `Name` object for each name you want to compare:
+First, import the library:
+```csharp
+using NameComparisonToolkit;
+```
+
+Mext, create a `Name` object for each name you want to compare:
 
 ```csharp
 var name1 = new Name("John", "Doe");
