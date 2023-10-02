@@ -149,15 +149,14 @@ public sealed class Name
 		=> string.IsNullOrEmpty(suffix)
 			? string.Empty
 			: suffix.Replace(".", "").ToLowerInvariant();
-	
-	private IEnumerable<string> ToLower(IEnumerable<string> namePart)
+
+	private static IEnumerable<string> ToLower(IEnumerable<string> namePart)
 	{
 		namePart = namePart.ToList().ConvertAll(s => s.ToLowerInvariant());
 		return namePart;
 	}
 
-	// kept for future development
-	private static Name Parse(string fullName)
+	public static Name TryParse(string fullName)
 	{
 		if (string.IsNullOrWhiteSpace(fullName))
 		{
@@ -175,8 +174,9 @@ public sealed class Name
 		var middleName = string.Empty;
 		var lastNames = new List<string>();
 		var suffix = tokens.Length > 1 && IsSuffix(tokens[^1]) ? tokens[^1] : string.Empty;
+		var suffixIndex = suffix.Equals(string.Empty) ? tokens.Length : tokens.Length - 1;
 
-		for (var i = 1; i < tokens.Length; i++)
+		for (var i = 1; i < suffixIndex; i++)
 		{
 			if (string.IsNullOrEmpty(middleName))
 			{
