@@ -6,6 +6,10 @@ namespace NameComparisonToolkit;
 public sealed class Name
 {
 	private static readonly string _ignoredString = "NONE";
+	private readonly IEnumerable<string> _originalFirstName;
+	private readonly IEnumerable<string> _originalLastName;
+	private readonly IEnumerable<string> _originalMiddleName;
+	private readonly string _originalSuffix;
 
 	/// <summary>
 	/// A collection of first name strings.
@@ -67,6 +71,12 @@ public sealed class Name
 	/// <param name="suffix">A string representing the name suffix.</param>
 	public Name(string firstName, string middleName, string lastName, string suffix)
 	{
+		_originalFirstName = firstName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		_originalLastName = lastName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		_originalMiddleName = middleName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		_originalSuffix = ReplaceIgnoredStrings(string.IsNullOrEmpty(suffix)
+			? string.Empty
+			: suffix.Replace(".", ""));
 		FirstName = firstName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : ToLower(firstName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
 		MiddleName = middleName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : ToLower(middleName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
 		LastName = lastName.IsNullOrWhiteSpace() ? Enumerable.Empty<string>() : ToLower(lastName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
@@ -149,15 +159,14 @@ public sealed class Name
 		=> string.IsNullOrEmpty(suffix)
 			? string.Empty
 			: suffix.Replace(".", "").ToLowerInvariant();
-	
-	private IEnumerable<string> ToLower(IEnumerable<string> namePart)
+
+	private static IEnumerable<string> ToLower(IEnumerable<string> namePart)
 	{
 		namePart = namePart.ToList().ConvertAll(s => s.ToLowerInvariant());
 		return namePart;
 	}
 
-	// kept for future development
-	private static Name Parse(string fullName)
+	public static Name TryParse(string fullName)
 	{
 		if (string.IsNullOrWhiteSpace(fullName))
 		{
@@ -175,8 +184,9 @@ public sealed class Name
 		var middleName = string.Empty;
 		var lastNames = new List<string>();
 		var suffix = tokens.Length > 1 && IsSuffix(tokens[^1]) ? tokens[^1] : string.Empty;
+		var suffixIndex = suffix.Equals(string.Empty) ? tokens.Length : tokens.Length - 1;
 
-		for (var i = 1; i < tokens.Length; i++)
+		for (var i = 1; i < suffixIndex; i++)
 		{
 			if (string.IsNullOrEmpty(middleName))
 			{

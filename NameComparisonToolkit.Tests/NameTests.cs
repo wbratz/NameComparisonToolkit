@@ -80,4 +80,18 @@ public class NameTests
 
 		result.Count().Should().Be(typeCount);
 	}
+
+	[Fact]
+	public void TryParse_FirstLastSuffix_ParsesCorrectly()
+	{
+		var name = Name.TryParse("John Smith III");
+		name.GetFullName().Should().BeEquivalentTo("John Smith III");
+	}
+
+	[Fact]
+	public void TryParse_FirstMiddleLastSuffix_ParsesCorrectly()
+	{
+		var name = Name.TryParse("John Adams Smith III");
+		name.GetFullName().Should().BeEquivalentTo("John Adams Smith III");
+	}
 }
