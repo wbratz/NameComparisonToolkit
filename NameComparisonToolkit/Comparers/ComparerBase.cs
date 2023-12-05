@@ -15,6 +15,25 @@ internal abstract class ComparerBase : IEqualityComparer<Name>
 		return x.SequenceEqual(y, StringComparer.InvariantCultureIgnoreCase);
 	}
 
+	internal static bool CompareRequiredNamePartInitialIgnoreOrder(IEnumerable<string> x, IEnumerable<string> y)
+	{
+		if (!x.Any() || !y.Any())
+		{
+			return false;
+		}
+
+		foreach (var xi in x)
+		{
+			if (y.Any(yi => string.Equals(xi, yi, StringComparison.InvariantCultureIgnoreCase)))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
 	internal static bool CompareRequiredNamePartIgnoreOrder(IEnumerable<string> x, IEnumerable<string> y)
 	{
 		if (!x.Any() || !y.Any())
