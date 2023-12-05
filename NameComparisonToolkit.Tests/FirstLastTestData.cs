@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 
 namespace NameComparisonToolkit.Tests;
 
@@ -36,7 +36,7 @@ public class FirstLastTestData : IEnumerable<object[]>
 			"jacob", "Adam", "SMITH", "Jr.",
 			"JACOB Adam", "", "Smith", "sr.",
 			FirstLastMatchResults(false, false, true, true)
-		}; 
+		};
 		yield return new object[]
 		{
 			"John James", "", "Smith Doe", "",
@@ -55,93 +55,93 @@ public class FirstLastTestData : IEnumerable<object[]>
 			"John James", "Adam", "Smith Johnson", "Jr.",
 			FirstLastMatchResults(false, false, true, true)
 		};
-		yield return new object[] 
-		{ 
-			"John James", "", "Smith Johnson", "Jr.", 
-			"John", "Adam", "Smith", "Jr.", 
-			FirstLastMatchResults(false, false, false, true) 
-		};
-		yield return new object[] 
-		{ 
-			"John James", "Adam", "Smith", "Jr.", 
-			"jon", "", "smit", "junior", 
-			FirstLastMatchResults(false, false, false, false) 
-		};
-		yield return new object[] 
-		{ 
-			"jon", "", "smit", "junior", 
-			"Jon James", "Adam", "Smith", "Jr.", 
-			FirstLastMatchResults(false, false, true, false) 
-		};
-		yield return new object[] 
-		{ 
-			"James", "John Adam", "Smith", "Sr.", 
-			"John", "Adam", "Smith", "Sr.", 
-			FirstLastMatchResults(false, false, false, false) 
-		};
-		yield return new object[] 
-		{ 
-			"John", "James Adam", "Smith", "Jr.",
-			"John", "Adam", "Smith", "Jr.", 
-			FirstLastMatchResults(true, true, true, true) 
+		yield return new object[]
+		{
+			"John James", "", "Smith Johnson", "Jr.",
+			"John", "Adam", "Smith", "Jr.",
+			FirstLastMatchResults(false, false, false, true)
 		};
 		yield return new object[]
-		{ 
-			"James", "John", "Smith", "Sr.",
-			"John", "Adam", "Smith", "sr", 
-			FirstLastMatchResults(false, false, false, false) 
-		};
-		yield return new object[] { 
-			"James", "John Adam", "Smith", "Sr.", 
-			"James", "Adam", "Smith", "", 
-			FirstLastMatchResults(true, true, true, true) };
-		yield return new object[] 
-		{ 
-			"john", "Adam", "Smith", "Jr.", 
-			"JOHN", "Adam James", "SMITH", "sr", 
-			FirstLastMatchResults(true, true, true, true) 
-		};
-		yield return new object[] 
 		{
-			"John", "", "Smith", "Sr.", 
-			"john", "Adam", "smith", "srt", 
-			FirstLastMatchResults(true, true, true, true) 
+			"John James", "Adam", "Smith", "Jr.",
+			"jon", "", "smit", "junior",
+			FirstLastMatchResults(false, false, false, false)
 		};
-		yield return new object[] 
-		{ 
-			"John", "Adam", "Smith", "Jr.", 
-			"John James", "Adam", "Smith", "Jr.", 
-			FirstLastMatchResults(false, false, true, true) 
+		yield return new object[]
+		{
+			"jon", "", "smit", "junior",
+			"Jon James", "Adam", "Smith", "Jr.",
+			FirstLastMatchResults(false, false, true, false)
 		};
-		yield return new object[] 
-		{ 
-			"John", "Adam", "Smith", "Jr.", 
-			"JOHN", "Adam James", "SMITH", "Jr.", 
-			FirstLastMatchResults(true, true, true, true) 
+		yield return new object[]
+		{
+			"James", "John Adam", "Smith", "Sr.",
+			"John", "Adam", "Smith", "Sr.",
+			FirstLastMatchResults(false, false, false, false)
 		};
-		yield return new object[] 
-		{ 
-			"John", "Adam Smith", "James", "Jr.", 
-			"John", "Adam", "Smith", "Jr.", 
-			FirstLastMatchResults(false, false, false, false) 
+		yield return new object[]
+		{
+			"John", "James Adam", "Smith", "Jr.",
+			"John", "Adam", "Smith", "Jr.",
+			FirstLastMatchResults(true, true, true, true)
 		};
-		yield return new object[] 
-		{ 
-			"John", "Adam", "Smith", "Jr.", 
-			"John", "Adam", "Smith", "Sr.", 
-			FirstLastMatchResults(true, true, true, true) 
+		yield return new object[]
+		{
+			"James", "John", "Smith", "Sr.",
+			"John", "Adam", "Smith", "sr",
+			FirstLastMatchResults(false, false, false, false)
 		};
-		yield return new object[] 
-		{ 
+		yield return new object[] {
+			"James", "John Adam", "Smith", "Sr.",
+			"James", "Adam", "Smith", "",
+			FirstLastMatchResults(true, true, true, true) };
+		yield return new object[]
+		{
+			"john", "Adam", "Smith", "Jr.",
+			"JOHN", "Adam James", "SMITH", "sr",
+			FirstLastMatchResults(true, true, true, true)
+		};
+		yield return new object[]
+		{
+			"John", "", "Smith", "Sr.",
+			"john", "Adam", "smith", "srt",
+			FirstLastMatchResults(true, true, true, true)
+		};
+		yield return new object[]
+		{
+			"John", "Adam", "Smith", "Jr.",
+			"John James", "Adam", "Smith", "Jr.",
+			FirstLastMatchResults(false, false, true, true)
+		};
+		yield return new object[]
+		{
+			"John", "Adam", "Smith", "Jr.",
+			"JOHN", "Adam James", "SMITH", "Jr.",
+			FirstLastMatchResults(true, true, true, true)
+		};
+		yield return new object[]
+		{
+			"John", "Adam Smith", "James", "Jr.",
+			"John", "Adam", "Smith", "Jr.",
+			FirstLastMatchResults(false, false, false, false)
+		};
+		yield return new object[]
+		{
+			"John", "Adam", "Smith", "Jr.",
+			"John", "Adam", "Smith", "Sr.",
+			FirstLastMatchResults(true, true, true, true)
+		};
+		yield return new object[]
+		{
 			"John James", "", "Doe", "",
-			"James John", "", "Smith Doe", "", 
-			FirstLastMatchResults(false, false, false, true) 
+			"James John", "", "Smith Doe", "",
+			FirstLastMatchResults(false, false, false, true)
 		};
-		
+
 	}
-	
+
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-	
+
 	private static bool[] FirstLastMatchResults(bool equalOutcome, bool equalIgnoreOrderOutcome, bool containsOutcome, bool intersectsOutcome)
 	{
 		return new[] { equalOutcome, equalIgnoreOrderOutcome, containsOutcome, intersectsOutcome };
