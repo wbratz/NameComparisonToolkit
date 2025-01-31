@@ -31,7 +31,7 @@ jobs:
        echo "Error: Failed to extract package version from NameComparisonToolkit.csproj"
        exit 1
        fi
-       EXISTS=$(nuget search NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
+       EXISTS=$(dotnet nuget list source NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
        echo "PACKAGE_VERSION_EXISTS=$EXISTS" >> $GITHUB_ENV
 
     - name: Fail if package version exists
