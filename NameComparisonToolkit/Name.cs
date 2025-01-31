@@ -159,6 +159,12 @@ public sealed class Name
 	private static Name ParseCommaSeparatedName(string fullName)
 	{
 		var parts = fullName.Split(new[] { ", " }, 2, StringSplitOptions.None);
+		
+		if(parts.Length < 2)
+		{
+			return new Name(parts[0], string.Empty);
+		}
+		
 		var lastName = parts[0];
 		var remainingParts = parts[1].Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -169,50 +175,69 @@ public sealed class Name
 		return new Name(firstName, middleName, lastName, suffix);
 	}
 
+	/// <summary>
+	/// Attempts to parse a full name string into a <see cref="Name"/> object.
+	/// Supports formats with or without commas, handling first, middle, last names, and suffixes.
+	/// If the full name contains a comma followed by a space (", "), it is assumed to be in "lastname, firstname" format.
+	/// Subsequent commas are ignored and treated as part of the name.
+	/// Commas not followed by a space does not indicate "lastname, firstname" format.
+	/// </summary>
+	/// <param name="fullName">The full name string to parse.</param>
+	/// <returns>A <see cref="Name"/> object representing the parsed name.</returns>
+	/// <exception cref="ArgumentException">Thrown when the full name is null or empty.</exception>
 	public static Name TryParse(string fullName)
 	{
-		if (string.IsNullOrWhiteSpace(fullName))
+		try
 		{
-			throw new ArgumentException("Full name cannot be null or empty.", nameof(fullName));
-		}
-
-		if (fullName.Contains(", "))
-		{
-			return ParseCommaSeparatedName(fullName);
-		}
-		
-		var tokens = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-		if (tokens.Length == 1)
-		{
-			return new Name(tokens[0], string.Empty);
-		}
-
-		var firstName = tokens[0];
-		var middleName = string.Empty;
-		var lastNames = new List<string>();
-		var suffix = tokens.Length > 1 && IsSuffix(tokens[^1]) ? tokens[^1] : string.Empty;
-		var suffixIndex = suffix.Equals(string.Empty) ? tokens.Length : tokens.Length - 1;
-
-		for (var i = 1; i < suffixIndex; i++)
-		{
-			if (string.IsNullOrEmpty(middleName))
+			if (string.IsNullOrWhiteSpace(fullName))
 			{
-				middleName = tokens[i];
+				throw new ArgumentException("Full name cannot be null or empty.", nameof(fullName));
 			}
-			else
+
+			fullName = fullName.TrimEnd();
+
+			if (fullName.Contains(", "))
 			{
-				lastNames.Add(tokens[i]);
+				return ParseCommaSeparatedName(fullName);
 			}
-		}
 
-		if (lastNames.Count == 0)
+			var tokens = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+			if (tokens.Length == 1)
+			{
+				return new Name(tokens[0], string.Empty);
+			}
+
+			var firstName = tokens[0];
+			var middleName = string.Empty;
+			var lastNames = new List<string>();
+			var suffix = tokens.Length > 1 && IsSuffix(tokens[^1]) ? tokens[^1] : string.Empty;
+			var suffixIndex = suffix.Equals(string.Empty) ? tokens.Length : tokens.Length - 1;
+
+			for (var i = 1; i < suffixIndex; i++)
+			{
+				if (string.IsNullOrEmpty(middleName))
+				{
+					middleName = tokens[i];
+				}
+				else
+				{
+					lastNames.Add(tokens[i]);
+				}
+			}
+
+			if (lastNames.Count == 0)
+			{
+				middleName = string.Empty;
+				lastNames.Add(tokens[1]);
+			}
+
+			return new Name(firstName, middleName, string.Join(" ", lastNames), suffix);
+		}
+		catch (Exception ex)
 		{
-			middleName = string.Empty;
-			lastNames.Add(tokens[1]);
+			throw new FormatException("An error occurred while parsing the full name.", ex);
 		}
-
-		return new Name(firstName, middleName, string.Join(" ", lastNames), suffix);
 	}
 
 	private static readonly string[] _suffixList = {

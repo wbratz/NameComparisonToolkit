@@ -122,4 +122,11 @@ public class NameTests
 		var name = Name.TryParse("Smith,John adam III");
 		name.GetFullName().Should().BeEquivalentTo("Smith,JOHN adam III");
 	}
+	
+	[Fact]
+	public void TryParse_x_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Smith, ");
+		name.GetFullName().Should().BeEquivalentTo("Smith,");
+	}
 }
