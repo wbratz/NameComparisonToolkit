@@ -178,9 +178,10 @@ public sealed class Name
 	/// <summary>
 	/// Attempts to parse a full name string into a <see cref="Name"/> object.
 	/// Supports formats with or without commas, handling first, middle, last names, and suffixes.
-	/// If the full name contains a comma followed by a space (", "), it is assumed to be in "lastname, firstname" format.
+	/// If the full name is only separated by spaces the format is assumed to be in "first middle last suffix" format.
+	/// If the full name contains a comma followed by a space (", "), it is assumed to be in "last, first middle suffix" format.
 	/// Subsequent commas are ignored and treated as part of the name.
-	/// Commas not followed by a space does not indicate "lastname, firstname" format.
+	/// Commas not followed by a space does not indicate "lastname, firstname" format
 	/// </summary>
 	/// <param name="fullName">The full name string to parse.</param>
 	/// <returns>A <see cref="Name"/> object representing the parsed name.</returns>

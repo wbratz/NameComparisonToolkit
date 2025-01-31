@@ -124,7 +124,7 @@ public class NameTests
 	}
 	
 	[Fact]
-	public void TryParse_x_ParsesCorrectly()
+	public void TryParse_NameCommaSpace_ParsesCorrectly()
 	{
 		var name = Name.TryParse("Smith, ");
 		name.GetFullName().Should().BeEquivalentTo("Smith,");
