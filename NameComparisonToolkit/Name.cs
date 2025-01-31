@@ -156,6 +156,19 @@ public sealed class Name
 		return namePart;
 	}
 
+	private static Name ParseCommaSeparatedName(string fullName)
+	{
+		var parts = fullName.Split(new[] { ", " }, 2, StringSplitOptions.None);
+		var lastName = parts[0];
+		var remainingParts = parts[1].Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+		var firstName = remainingParts[0];
+		var middleName = remainingParts.Length > 2 ? string.Join(" ", remainingParts.Skip(1).Take(remainingParts.Length - 2)) : string.Empty;
+		var suffix = remainingParts.Length > 1 && IsSuffix(remainingParts[^1]) ? remainingParts[^1] : string.Empty;
+
+		return new Name(firstName, middleName, lastName, suffix);
+	}
+
 	public static Name TryParse(string fullName)
 	{
 		if (string.IsNullOrWhiteSpace(fullName))
@@ -163,6 +176,11 @@ public sealed class Name
 			throw new ArgumentException("Full name cannot be null or empty.", nameof(fullName));
 		}
 
+		if (fullName.Contains(", "))
+		{
+			return ParseCommaSeparatedName(fullName);
+		}
+		
 		var tokens = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
 		if (tokens.Length == 1)
