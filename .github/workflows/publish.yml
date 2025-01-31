@@ -26,7 +26,7 @@ jobs:
     - name: Check if package version exists
       run: |
        cat NameComparisonToolkit/NameComparisonToolkit.csproj
-       PACKAGE_VERSION=$(grep -o '(?<=<Version>).*(?=</Version>)' NameComparisonToolkit/NameComparisonToolkit.csproj)
+       PACKAGE_VERSION=$(grep -oP '(?<=<Version>).*?(?=</Version>)' NameComparisonToolkit/NameComparisonToolkit.csproj)
        if [ -z "$PACKAGE_VERSION" ]; then
        echo "Error: Failed to extract package version from NameComparisonToolkit.csproj"
        exit 1
