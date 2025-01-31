@@ -94,4 +94,39 @@ public class NameTests
 		var name = Name.TryParse("John Adams Smith III");
 		name.GetFullName().Should().BeEquivalentTo("John Adams Smith III");
 	}
+	
+	[Fact]
+	public void TryParse_LastCommaFirst_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Smith, John adam III");
+		name.GetFullName().Should().BeEquivalentTo("John Adam Smith III");
+	}
+	
+	[Fact]
+	public void TryParse_LastWithSpaceCommaFirstMiddleLastSuffix_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Van Lew, Adam bosh sr");
+		name.GetFullName().Should().BeEquivalentTo("adam bosh van lew sr");
+	}
+	
+	[Fact]
+	public void TryParse_LastCommaFirstWithMiddleExtraComma_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Smith-johnson, John adam, III");
+		name.GetFullName().Should().BeEquivalentTo("John Adam Smith-JohnsON III");
+	}
+	
+	[Fact]
+	public void TryParse_LastCommaFirstWithNoSpace_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Smith,John adam III");
+		name.GetFullName().Should().BeEquivalentTo("Smith,JOHN adam III");
+	}
+	
+	[Fact]
+	public void TryParse_NameCommaSpace_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Smith, ");
+		name.GetFullName().Should().BeEquivalentTo("Smith,");
+	}
 }
