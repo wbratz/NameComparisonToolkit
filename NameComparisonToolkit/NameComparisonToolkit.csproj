@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageId>NameComparisonToolkit</PackageId>
-		<Version>1.2.1</Version>
+		<Version>1.2.2</Version>
 		<Authors>Lillie Bradfield, William Bratz</Authors>
 		<Description>Name Comparison with lots of features</Description>
 		<PackageReleaseNotes>This package takes name parts as strings, compares, then returns MatchResults object with data from multiple matching methods and a matching score</PackageReleaseNotes>
@@ -14,6 +14,11 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/wbratz/name-matcher</PackageProjectUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 
 </Project>
