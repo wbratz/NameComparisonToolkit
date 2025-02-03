@@ -31,11 +31,58 @@ First, import the library:
 using NameComparisonToolkit;
 ```
 
-Mext, create a `Name` object for each name you want to compare:
+You can create a `Name` object in two ways:
 
+1. Using the constructor:
 ```csharp
 var name1 = new Name("John", "Doe");
-var name2 = new Name("John", "Smith");
+var name2 = new Name("John", "Michael", "Smith", "Jr.");  // with middle name and suffix
+```
+
+2. Using TryParse for full name strings:
+```csharp
+// Space-separated format (assumes "first middle last suffix" order)
+var name1 = Name.TryParse("John Michael Smith Jr");
+
+// Comma-separated format (assumes "last, first middle suffix" order)
+var name2 = Name.TryParse("Smith, John Michael Jr");
+```
+
+The `TryParse` method is particularly useful when working with full name strings. It supports:
+- Space-separated names (interpreted as "first middle last suffix")
+- Comma-separated names (interpreted as "last, first middle suffix")
+  - Note: Only commas followed by a space (", ") trigger the "last, first" format
+  - Commas without a following space are treated as part of the name (e.g., "Smith,Jr" is not split)
+  - Additional commas are ignored 
+- Names with or without middle names
+- Names with or without suffixes (Jr, Sr, III, etc.)
+- Multiple word last names
+
+Important: When parsing names with commas:
+- "Smith, John" -> Last: "Smith", First: "John" (comma + space triggers last,first format)
+- "Smith,John" -> First: "Smith,John" (no space after comma, treated as single name)
+
+Examples:
+```csharp
+// Basic first and last
+var name1 = Name.TryParse("John Smith");                    // First: "John", Last: "Smith"
+
+// With middle name
+var name2 = Name.TryParse("John Michael Smith");            // First: "John", Middle: "Michael", Last: "Smith"
+
+// With suffix
+var name3 = Name.TryParse("John Michael Smith Jr");         // First: "John", Middle: "Michael", Last: "Smith", Suffix: "Jr"
+
+// Multi-word last name without comma
+var name4 = Name.TryParse("John Van Der Berg");             // First: "John", Middle: "Van", Last: "Der Berg"
+                                                           // But name4.GetFullName() still returns "john van der berg"
+
+// With comma (preferred for multi-word last names)
+var name5 = Name.TryParse("Van Der Berg, John");            // First: "John", Last: "Van Der Berg"
+                                                           // name5.GetFullName() returns "john van der berg"
+
+// Note: For space-separated multi-word last names, using comma format is recommended
+// to ensure correct parsing of the last name as a single unit
 ```
 
 ### Comparing Names
@@ -62,7 +109,7 @@ Example output:
 "ComparisonType": "Exact"
 "IsMatch": false
 "Similarity": 0.5
-// ...
+
 ```
 
 Compare the two names ignoring the order of the name parts:
@@ -86,7 +133,7 @@ Example output:
 "ComparisonType": "Exact"
 "IsMatch": true
 "Similarity": 1.0
-// ...
+
 ```
 
 ### Containing Names
@@ -108,7 +155,7 @@ Example output:
 "ComparisonType": "Exact"
 "IsMatch": true
 "Similarity": 1.0
-// ...
+
 ```
 
 ### Intersecting Names
@@ -131,7 +178,7 @@ Example output:
 "ComparisonType": "Exact"
 "IsMatch": true
 "Similarity": 0.5
-// ...
+
 ```
 
 ### Comparison Results
