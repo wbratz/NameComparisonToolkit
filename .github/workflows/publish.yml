@@ -25,14 +25,19 @@ jobs:
 
     - name: Check if package version exists
       run: |
-       cat NameComparisonToolkit/NameComparisonToolkit.csproj
-       PACKAGE_VERSION=$(grep -o '(?<=<Version>).*(?=</Version>)' NameComparisonToolkit/NameComparisonToolkit.csproj)
-       if [ -z "$PACKAGE_VERSION" ]; then
-       echo "Error: Failed to extract package version from NameComparisonToolkit.csproj"
-       exit 1
-       fi
-       EXISTS=$(dotnet nuget list source NameComparisonToolkit | grep -c "$PACKAGE_VERSION")
-       echo "PACKAGE_VERSION_EXISTS=$EXISTS" >> $GITHUB_ENV
+        cat NameComparisonToolkit/NameComparisonToolkit.csproj
+        PACKAGE_VERSION=$(sed -n 's:.*<Version>\\(.*\\)</Version>.*:\\1:p' NameComparisonToolkit/NameComparisonToolkit.csproj)
+        if [ -z "$PACKAGE_VERSION" ]; then
+          echo "Error: Failed to extract package version from NameComparisonToolkit.csproj"
+          exit 1
+        fi
+
+        RESULT=$(dotnet nuget search NameComparisonToolkit --prerelease --source https://api.nuget.org/v3/index.json --take 1000 | grep -c "$PACKAGE_VERSION")
+        if [ "$RESULT" -gt 0 ]; then
+          echo "PACKAGE_VERSION_EXISTS=1" >> $GITHUB_ENV
+        else
+          echo "PACKAGE_VERSION_EXISTS=0" >> $GITHUB_ENV
+        fi
 
     - name: Fail if package version exists
       if: env.PACKAGE_VERSION_EXISTS != '0'
@@ -45,4 +50,3 @@ jobs:
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         DOTNET_CLI_TELEMETRY_OPTOUT: true
-
