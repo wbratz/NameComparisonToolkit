@@ -32,7 +32,7 @@ jobs:
         fi
         echo "Found package version: $PACKAGE_VERSION"
         EXISTS=$(dotnet nuget search NameComparisonToolkit | grep -c "$PACKAGE_VERSION" || echo "0")
-        RESULT=$(echo "$RESULT" | tr -d '\n')
+        RESULT=$(echo "$EXISTS" | tr -d '\n')
         echo "Package version exists check result: $RESULT"
         echo "PACKAGE_VERSION_EXISTS=$RESULT" >> $GITHUB_ENV
 
