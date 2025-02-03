@@ -32,8 +32,9 @@ jobs:
         fi
         echo "Found package version: $PACKAGE_VERSION"
         EXISTS=$(dotnet nuget search NameComparisonToolkit | grep -c "$PACKAGE_VERSION" || echo "0")
-        echo "Package version exists check result: $EXISTS"
-        echo "PACKAGE_VERSION_EXISTS=$EXISTS" >> "$GITHUB_ENV"
+        RESULT=$(echo "$RESULT" | tr -d '\n')
+        echo "Package version exists check result: $RESULT"
+        echo "PACKAGE_VERSION_EXISTS=$RESULT" >> $GITHUB_ENV
 
     - name: Fail if package version exists
       if: env.PACKAGE_VERSION_EXISTS != '0'
