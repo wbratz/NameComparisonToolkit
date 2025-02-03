@@ -89,6 +89,13 @@ public class NameTests
 	}
 
 	[Fact]
+	public void TryParse_FirstTwoPartLastSuffix_ParsesCorrectly()
+	{
+		var name = Name.TryParse("John michael Van DER berg III");
+		name.GetFullName().Should().BeEquivalentTo("John michael Van der berg III");
+	}
+	
+	[Fact]
 	public void TryParse_FirstMiddleLastSuffix_ParsesCorrectly()
 	{
 		var name = Name.TryParse("John Adams Smith III");

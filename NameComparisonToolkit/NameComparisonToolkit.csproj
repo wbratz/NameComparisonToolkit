@@ -4,15 +4,16 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-				<PackageId>NameComparisonToolkit</PackageId>
-				<Version>1.2.0</Version>
-				<Authors>Lillie Bradfield, William Bratz</Authors>
-				<Description>Name Comparison with lots of features</Description>
-				<PackageReleaseNotes>This package takes name parts as strings, compares, then returns MatchResults object with data from multiple matching methods and a matching score</PackageReleaseNotes>
-				<PackageTags>Name, Matching, Matcher, Match, Comparison</PackageTags>
-				<PackageLicenseExpression>MIT</PackageLicenseExpression>
-				<PackageProjectUrl>https://github.com/wbratz/name-matcher</PackageProjectUrl>
-				<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageId>NameComparisonToolkit</PackageId>
+		<Version>1.2.1</Version>
+		<Authors>Lillie Bradfield, William Bratz</Authors>
+		<Description>Name Comparison with lots of features</Description>
+		<PackageReleaseNotes>This package takes name parts as strings, compares, then returns MatchResults object with data from multiple matching methods and a matching score</PackageReleaseNotes>
+		<PackageTags>Name, Matching, Matcher, Match, Comparison</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/wbratz/name-matcher</PackageProjectUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
 </Project>
