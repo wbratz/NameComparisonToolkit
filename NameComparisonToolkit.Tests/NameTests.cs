@@ -136,4 +136,25 @@ public class NameTests
 		var name = Name.TryParse("Smith, ");
 		name.GetFullName().Should().BeEquivalentTo("Smith,");
 	}
+	
+	[Fact]
+	public void TryParse_LastNameCommaFirstWithMiddleNoSuffix_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Kerr, Katelyn R");
+		name.GetFullName().Should().BeEquivalentTo("Katelyn R Kerr");
+	}
+	
+	[Fact]
+	public void TryParse_LastNameCommaFirstWithMiddleWithSuffix_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Kerr, Katelyn, R Jr");
+		name.GetFullName().Should().BeEquivalentTo("Katelyn R Kerr Jr");
+	}
+	
+	[Fact]
+	public void TryParse_LastNameCommaFirstWithMiddleExtraComma_ParsesCorrectly()
+	{
+		var name = Name.TryParse("Kerr, Katelyn R, ");
+		name.GetFullName().Should().BeEquivalentTo("Katelyn R Kerr");
+	}
 }

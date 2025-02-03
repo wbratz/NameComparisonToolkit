@@ -166,11 +166,11 @@ public sealed class Name
 		}
 		
 		var lastName = parts[0];
-		var remainingParts = parts[1].Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+		var remainingParts = parts[1].TrimEnd(',').Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
 		var firstName = remainingParts[0];
-		var middleName = remainingParts.Length > 2 ? string.Join(" ", remainingParts.Skip(1).Take(remainingParts.Length - 2)) : string.Empty;
-		var suffix = remainingParts.Length > 1 && IsSuffix(remainingParts[^1]) ? remainingParts[^1] : string.Empty;
+		var middleName = remainingParts.Length > 2 ? string.Join(" ", remainingParts.Skip(1).Take(remainingParts.Length - 2)) : (remainingParts.Length == 2 ? remainingParts[1] : string.Empty);
+		var suffix = remainingParts.Length > 2 && IsSuffix(remainingParts[^1]) ? remainingParts[^1] : string.Empty;
 
 		return new Name(firstName, middleName, lastName, suffix);
 	}
