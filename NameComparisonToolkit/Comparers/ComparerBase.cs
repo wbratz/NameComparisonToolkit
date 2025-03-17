@@ -1,4 +1,6 @@
-﻿namespace NameComparisonToolkit.Comparers;
+﻿using NameComparisonToolkit.Similarity;
+
+namespace NameComparisonToolkit.Comparers;
 
 internal abstract class ComparerBase : IEqualityComparer<Name>
 {
@@ -66,7 +68,7 @@ internal abstract class ComparerBase : IEqualityComparer<Name>
 	internal abstract bool EqualsIgnoreOrder(Name x, Name y);
 	internal abstract bool Contains(Name x, string y);
 	internal abstract bool Intersects(Name x, Name y);
-	internal abstract double GetSimilarity(Name x, Name y);
-	internal abstract double GetSimilarity(Name x, string y);
+	internal abstract double GetSimilarity(Name x, Name y, SimilarityOptions? options = null);
+	internal abstract double GetSimilarity(Name x, string y, SimilarityOptions? options = null);
 	public abstract int GetHashCode(Name obj);
 }

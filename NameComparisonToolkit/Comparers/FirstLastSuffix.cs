@@ -32,14 +32,22 @@ internal sealed class FirstLastSuffix : ComparerBase
 				 ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
 
-	internal override double GetSimilarity(Name x, Name y)
-		=> SimilarityBuilder.Build(x.FirstName.Join(" ").ToLowerInvariant(), y.FirstName.Join(" ").ToLowerInvariant())
-			* SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant())
-			* SimilarityBuilder.Build(x.Suffix.ToLowerInvariant(), y.Suffix.ToLowerInvariant());
+	internal override double GetSimilarity(Name x, Name y, SimilarityOptions? options = null)
+	{
+		var val = SimilarityBuilder.Build(x.FirstName.Join(" ").ToLowerInvariant(), y.FirstName.Join(" ").ToLowerInvariant(), options)
+				* SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant(), options)
+				* SimilarityBuilder.Build(x.Suffix.ToLowerInvariant(), y.Suffix.ToLowerInvariant(), options);
 
-	internal override double GetSimilarity(Name x, string y)
-		=> SimilarityBuilder.Build($"{x.FirstName.Join(" ")} {x.LastName.Join(" ")} {x.Suffix}".ToLowerInvariant(), y.ToLowerInvariant());
+		return val;
+	}
 
+	internal override double GetSimilarity(Name x, string y, SimilarityOptions? options = null)
+	{
+
+		var val = SimilarityBuilder.Build($"{x.FirstName.Join(" ")} {x.LastName.Join(" ")} {x.Suffix}".ToLowerInvariant(), y.ToLowerInvariant(), options);
+
+		return val;
+	}
 
 	internal override bool Intersects(Name x, Name y)
 		=> y.FirstName.Intersect(x.FirstName).Any()

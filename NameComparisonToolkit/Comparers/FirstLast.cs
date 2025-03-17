@@ -28,12 +28,16 @@ internal sealed class FirstLast : ComparerBase
 					 => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
 		};
 
-	internal override double GetSimilarity(Name x, Name y)
-		=> SimilarityBuilder.Build(x.FirstName.Join(" ").ToLowerInvariant(), y.FirstName.Join(" ").ToLowerInvariant())
-			* SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant());
+	internal override double GetSimilarity(Name x, Name y, SimilarityOptions? options = null)
+	{
+		var val = SimilarityBuilder.Build(x.FirstName.Join(" ").ToLowerInvariant(), y.FirstName.Join(" ").ToLowerInvariant(), options)
+				* SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant(), options);
 
-	internal override double GetSimilarity(Name x, string y)
-		=> SimilarityBuilder.Build($"{x.FirstName.Join(" ")} {x.LastName.Join(" ")}".ToLowerInvariant(), y.ToLowerInvariant());
+		return val;
+	}
+
+	internal override double GetSimilarity(Name x, string y, SimilarityOptions? options = null)
+		=> SimilarityBuilder.Build($"{x.FirstName.Join(" ")} {x.LastName.Join(" ")}".ToLowerInvariant(), y.ToLowerInvariant(), options);
 
 	internal override bool Intersects(Name x, Name y)
 		=> y.FirstName.Intersect(x.FirstName).Any()

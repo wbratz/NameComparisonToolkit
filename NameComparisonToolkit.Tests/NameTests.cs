@@ -1,4 +1,6 @@
-﻿namespace NameComparisonToolkit.Tests;
+﻿using NameComparisonToolkit.Similarity;
+
+namespace NameComparisonToolkit.Tests;
 
 public class NameTests
 {
@@ -156,5 +158,107 @@ public class NameTests
 	{
 		var name = Name.TryParse("Kerr, Katelyn R, ");
 		name.GetFullName().Should().BeEquivalentTo("Katelyn R Kerr");
+	}
+	
+	[Theory]
+	[InlineData(SimilarityAlgorithmType.JaroWinkler)]
+	[InlineData(SimilarityAlgorithmType.DoubleMetaphone)]
+	[InlineData(SimilarityAlgorithmType.TokenMatcher)]
+	[InlineData(SimilarityAlgorithmType.DamerauLevenshtein)]
+	public void GetSimilarity_WithName_ShouldReturnResultsForAllComparisonTypes(SimilarityAlgorithmType algorithm)
+	{
+		// Arrange
+		var name1 = new Name("John", "Michael", "Smith", "Jr");
+		var name2 = new Name("Jon", "Mike", "Smythe", "Jr");
+		var options = new SimilarityOptions { Algorithm = algorithm };
+
+		// Act
+		var results = name1.Matches(name2, options);
+
+		// Assert
+		results.Count().Should().Be(Enum.GetValues(typeof(ComparisonType)).Length);
+		results.All(r => r.Similarity >= 0.0 && r.Similarity <= 1.0).Should().BeTrue();
+	}
+
+	[Fact]
+	public void GetSimilarity_WithDoubleMetaphone_ShouldHandlePhoneticVariations()
+	{
+		// Arrange
+		var name1 = new Name("Catherine", "", "Smith", "");
+		var name2 = new Name("Katherine", "", "Smythe", "");
+		var options = new SimilarityOptions
+		{
+			Algorithm = SimilarityAlgorithmType.DoubleMetaphone,
+			UseSecondaryEncoding = true
+		};
+
+		// Act
+		var results = name1.Matches(name2, options);
+
+		// Assert
+		foreach (var result in results)
+		{
+			result.Similarity.Should().BeGreaterThan(0.8);
+		}
+	}
+
+	[Fact]
+	public void GetSimilarity_WithTokenMatcher_ShouldHandleWordOrder()
+	{
+		// Arrange
+		var name1 = new Name("John Michael", "", "Smith", "");
+		var name2 = new Name("Michael John", "", "Smith", "");
+		var options = new SimilarityOptions
+		{
+			Algorithm = SimilarityAlgorithmType.TokenMatcher,
+			UseWordWeighting = false
+		};
+
+		// Act
+		var results = name1.Matches(name2, options);
+
+		// Assert
+		foreach (var result in results)
+		{
+			result.Similarity.Should().BeGreaterThan(0.8);
+		}
+	}
+
+	[Fact]
+	public void GetSimilarity_WithDamerauLevenshtein_ShouldHandleTypos()
+	{
+		// Arrange
+		var name1 = new Name("John", "", "Smith", "");
+		var name2 = new Name("Jhon", "", "Simth", "");
+		var options = new SimilarityOptions
+		{
+			Algorithm = SimilarityAlgorithmType.DamerauLevenshtein,
+			NormalizeDistance = true
+		};
+
+		// Act
+		var results = name1.Matches(name2, options).ToList();
+
+		// Assert
+		foreach (var result in results)
+		{
+			result.Similarity.Should().BeGreaterThan(0.59);
+		}
+	}
+
+	[Fact]
+	public void GetSimilarity_WithNullOrEmpty_ShouldHandleGracefully()
+	{
+		// Arrange
+		var name1 = new Name("John", "", "Smith", "");
+		var name2 = new Name("", "", "", "");
+		var options = new SimilarityOptions();
+
+		// Act
+		var results = name1.Matches(name2, options);
+
+		// Assert
+		results.Should().NotBeNull();
+		results.All(r => r.Similarity >= 0.0 && r.Similarity <= 1.0).Should().BeTrue();
 	}
 }

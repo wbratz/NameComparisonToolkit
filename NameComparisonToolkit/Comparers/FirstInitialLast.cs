@@ -28,12 +28,12 @@ internal sealed class FirstInitialLast : ComparerBase
 					 => hash ^ StringComparer.OrdinalIgnoreCase.GetHashCode(lastName.ToLowerInvariant()))
 		};
 
-	internal override double GetSimilarity(Name x, Name y)
-		=> SimilarityBuilder.Build(x.FirstName.Select(fn => fn[..1]).Join(" ").ToLowerInvariant(), y.FirstName.Select(fn => fn[..1]).Join(" ").ToLowerInvariant())
+	internal override double GetSimilarity(Name x, Name y, SimilarityOptions? options = null)
+		=> SimilarityBuilder.Build(x.FirstName.Select(fn => fn[..1]).Join(" ").ToLowerInvariant(), y.FirstName.Select(fn => fn[..1]).Join(" ").ToLowerInvariant(), options)
 		   * SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant());
 
-	internal override double GetSimilarity(Name x, string y)
-		=> SimilarityBuilder.Build($"{x.FirstName.Select(fn => fn[..1]).Join(" ")} {x.LastName.Join(" ")}".ToLowerInvariant(), y.ToLowerInvariant());
+	internal override double GetSimilarity(Name x, string y, SimilarityOptions? options = null)
+		=> SimilarityBuilder.Build($"{x.FirstName.Select(fn => fn[..1]).Join(" ")} {x.LastName.Join(" ")}".ToLowerInvariant(), y.ToLowerInvariant(), options);
 
 	internal override bool Intersects(Name x, Name y)
 		=> y.FirstName.Select(fn => fn[..1]).Intersect(x.FirstName.Select(fn => fn[..1])).Any()

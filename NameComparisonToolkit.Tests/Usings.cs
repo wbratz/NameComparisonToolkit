@@ -1,3 +1,2 @@
-﻿global using Xunit;
-global using FluentAssertions;
-global using NameComparisonToolkit.Comparers;
+﻿global using FluentAssertions;
+global using Xunit;

@@ -1,5 +1,6 @@
 ﻿using NameComparisonToolkit.Comparers;
 using NameComparisonToolkit.Extensions;
+using NameComparisonToolkit.Similarity;
 
 namespace NameComparisonToolkit;
 
@@ -94,10 +95,9 @@ public sealed class Name
 	/// </summary>
 	/// <param name="nameToCompare">The name object to compare.</param>
 	/// <returns>List of all Comparison results</returns>
-	public IEnumerable<ComparisonResult> Matches(Name nameToCompare)
-		=> ExecuteComparison(nameToCompare, (comparer, comparisonType, name) => Compare(name, comparer, comparisonType));
+	public IEnumerable<ComparisonResult> Matches(Name nameToCompare, SimilarityOptions? options = null)
+		=> ExecuteComparison(nameToCompare, (comparer, comparisonType, name) => Compare(name, comparer, comparisonType, options));
 
-	/// <summary>
 	/// Compares the given name object with the current name object using all available comparison types and returns a list of comparison results.
 	/// Uses Equals for each name part given the comparison type
 	/// </summary>
@@ -127,8 +127,8 @@ public sealed class Name
 			.Cast<ComparisonType>()
 			.Select(t => comparisonFunction(t.GetComparer(), t, nameToCompare));
 
-	private ComparisonResult Compare(Name name, ComparerBase comparer, ComparisonType comparisonType)
-		=> new(comparisonType, comparer.Equals(this, name), comparer.GetSimilarity(this, name));
+	private ComparisonResult Compare(Name name, ComparerBase comparer, ComparisonType comparisonType, SimilarityOptions? options)
+		=> new(comparisonType, comparer.Equals(this, name), comparer.GetSimilarity(this, name, options));
 
 	private ComparisonResult CompareIgnoreOrder(Name name, ComparerBase comparer, ComparisonType comparisonType)
 		=> new(comparisonType, comparer.EqualsIgnoreOrder(this, name), comparer.GetSimilarity(this, name));
