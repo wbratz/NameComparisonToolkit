@@ -30,14 +30,14 @@ internal sealed class ExactMatch : ComparerBase
 				 ^ StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Suffix.ToLowerInvariant())
 		};
 
-	internal override double GetSimilarity(Name x, Name y)
-		=> SimilarityBuilder.Build(string.Join(" ", x.FirstName).ToLowerInvariant(), string.Join(" ", y.FirstName).ToLowerInvariant())
-			* SimilarityBuilder.Build(string.Join(" ", x.MiddleName).ToLowerInvariant(), string.Join(" ", y.MiddleName).ToLowerInvariant())
-			* SimilarityBuilder.Build(string.Join(" ", x.LastName).ToLowerInvariant(), string.Join(" ", y.LastName).ToLowerInvariant())
-			* SimilarityBuilder.Build(x.Suffix.ToLowerInvariant(), y.Suffix.ToLowerInvariant());
+	internal override double GetSimilarity(Name x, Name y, SimilarityOptions? options = null)
+		=> SimilarityBuilder.Build(string.Join(" ", x.FirstName).ToLowerInvariant(), string.Join(" ", y.FirstName).ToLowerInvariant(), options)
+			* SimilarityBuilder.Build(string.Join(" ", x.MiddleName).ToLowerInvariant(), string.Join(" ", y.MiddleName).ToLowerInvariant(), options)
+			* SimilarityBuilder.Build(string.Join(" ", x.LastName).ToLowerInvariant(), string.Join(" ", y.LastName).ToLowerInvariant(), options)
+			* SimilarityBuilder.Build(x.Suffix.ToLowerInvariant(), y.Suffix.ToLowerInvariant(), options);
 
-	internal override double GetSimilarity(Name x, string y)
-		=> SimilarityBuilder.Build(x.GetFullName().ToLowerInvariant(), y.ToLowerInvariant());
+	internal override double GetSimilarity(Name x, string y, SimilarityOptions? options = null)
+		=> SimilarityBuilder.Build(x.GetFullName().ToLowerInvariant(), y.ToLowerInvariant(), options);
 
 	private static bool CompareTokens(Name x, Name y)
 	{

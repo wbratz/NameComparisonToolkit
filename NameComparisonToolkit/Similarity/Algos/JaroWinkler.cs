@@ -1,9 +1,10 @@
 ﻿using NameComparisonToolkit.Extensions;
 
-namespace NameComparisonToolkit.Confidence.Algos;
-internal static class JaroWinkler
+namespace NameComparisonToolkit.Similarity.Algos;
+
+internal class JaroWinkler : ISimilarityAlgorithm
 {
-	internal static double CalculateStringSimilarity(string str1, string str2)
+	public double Calculate(string str1, string str2)
 	{
 		if (str1.IsNullOrWhiteSpace() && str2.IsNullOrWhiteSpace())
 		{
@@ -15,6 +16,11 @@ internal static class JaroWinkler
 			return 0.0;
 		}
 
+		return CalculateStringSimilarity(str1, str2);
+	}
+
+	internal static double CalculateStringSimilarity(string str1, string str2)
+	{
 		var matches = 0;
 		var transpositions = 0;
 		var halfLength = Math.Min(str1.Length, str2.Length) / 2 + 1;

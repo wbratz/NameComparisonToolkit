@@ -14,11 +14,11 @@ internal sealed class Last : ComparerBase
 	internal override bool Contains(Name x, string y)
 		=> y.Contains(string.Join(" ", x.LastName), StringComparison.OrdinalIgnoreCase);
 
-	internal override double GetSimilarity(Name x, Name y)
-	=> SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant());
+	internal override double GetSimilarity(Name x, Name y, SimilarityOptions? options = null)
+	=> SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.LastName.Join(" ").ToLowerInvariant(), options);
 
-	internal override double GetSimilarity(Name x, string y)
-		=> SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.ToLowerInvariant());
+	internal override double GetSimilarity(Name x, string y, SimilarityOptions? options = null)
+		=> SimilarityBuilder.Build(x.LastName.Join(" ").ToLowerInvariant(), y.ToLowerInvariant(), options);
 
 	internal override bool Intersects(Name x, Name y)
 		=> y.LastName.Intersect(x.LastName).Any();
